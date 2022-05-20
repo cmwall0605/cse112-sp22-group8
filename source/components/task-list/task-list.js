@@ -35,7 +35,8 @@ class TaskList extends HTMLElement {
     // set styles for shadow elements
     const styleSheet = document.createElement('link');
     styleSheet.rel = 'stylesheet';
-    styleSheet.href = '/components/task-list/task-list.css';
+    styleSheet.type = 'text/css';
+    styleSheet.href = './components/task-list/task-list.css';
 
     this.shadowRoot.appendChild(styleSheet);
   }
