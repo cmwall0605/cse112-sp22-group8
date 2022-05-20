@@ -123,7 +123,7 @@ class HeaderComp extends HTMLElement {
     const styleSheet = document.createElement('link');
     styleSheet.rel = 'stylesheet';
     styleSheet.type = 'text/css';
-    styleSheet.href = './components/header-comp/header-comp.css';
+    styleSheet.href = '/source/components/header-comp/header-comp.css';
 
     this.shadowRoot.appendChild(styleSheet);
     this.shadowRoot.appendChild(section);
