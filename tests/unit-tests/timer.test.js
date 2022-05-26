@@ -49,93 +49,116 @@ document.body.innerHTML = `<!DOCTYPE html>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    />
-
-    <!-- Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
-    <!-- Simple UI to change timer length-->
-    <input type="text" id="TimerMinutes" onchange="updateTimerLength('TimerMinutes')">
-    <input type="text" id="ShortBreakMinutes" onchange="updateTimerLength('ShortBreakMinutes')">
-    <input type="text" id="LongBreakMinutes" onchange="updateTimerLength('LongBreakMinutes')">
-    <!-- End of simple UI to change timer length-->
-    
     <!--My CSS-->
     <link rel="stylesheet" href="./timer.css" />
-    <link rel="stylesheet" href="./timer-modals.css" />
-
-    <!--Font-->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap"
-      rel="stylesheet"
-    />
 
     <title id="title_timer">Pomodoro Timer</title>
   </head>
 
   <body onload="timerPageInit()">
-    <header-comp id="header"></header-comp>
+  
+    <!--Javascript Not Enabled Contingency-->
+    <noscript>
+      <section style="width: 100vw; height: 100vh; background-color: black;">
+        <h1 style="margin: 0; text-align: center; font-size: 3em; color: red;">
+          WARNING! Javascript is disabled on your browser!
+        </h1>
+        <p style="text-align: center; font-size: 3em; color: red;">
+          This website only works with browsers which support Javascript.
+        </p>
+      </section>
+    </noscript>
+    
+    <!--CSS Not Enabled Contingency-->
+    <section class="no-style" style="width: 100%; background-color: black;">
+      <h1 style="text-align: center; font-size: 3em; color: red;">
+        WARNING! CSS is not working!
+      </h1>
+    </section>
+  
+    <header-comp page="timer"></header-comp>
+
+    <!--Task Heading-->
     <div class="container">
+      <h1 id="currTask">No Task Selected</h1>
+      <button id="deselect-task">cancel</button>
+    </div>
+    <div class="container timer">
+      <span class="container">
+        <h4 id="minutes"></h4>
+        <h4>:</h4>
+        <h4 id="seconds"></h4>
+      </span>
 
-      <!--Task Heading-->
-      <h1 class="text-center my-5" id="currTask">Task</h1>
+      <svg class="progress-ring" height="27.5rem" width="27.5rem">
+        <circle
+          class="progress-ring-circle"
+          id="progress-ring-circle"
+          stroke-width="40"
+          fill="transparent"
+          r="200"
+          cx="13.75rem"
+          cy="13.75rem"
+          stroke="#2E4756"
+        />
+      </svg>
+    </div>
 
-      <div class="container timer">
-        <div class="row">
-          <div class="col-5">
-            <h4 id="minutes"></h4>
-          </div>
-          <div class="col-2">
-            <h4>:</h4>
-          </div>
-          <div class="col-5">
-            <h4 id="seconds"></h4>
-          </div>
-        </div>
+    <!--Buttons-->
+    <section id="button-container" class="container">
+      <!-- The page opens with just the start button visible -->
+      <button class="startButton" id="start-btn">Start</button>
 
-        <svg class="progress-ring" height="27.5rem" width="27.5rem">
-          <circle
-            class="progress-ring-circle"
-            id="progress-ring-circle"
-            stroke-width="40"
-            fill="transparent"
-            r="200"
-            cx="13.75rem"
-            cy="13.75rem"
-            stroke="#2E4756"
-          />
-        </svg>
-      </div>
+      <!-- The create task form will become visible if start is pressed
+            without a task selected -->
+      <form id="create-task" style="display:none;">
+        <label for="choose-task" class="label-heading">
+          Choose a task to start
+        </label>
+        <select id="choose-task">
+          <option value="">-</option>
+          <!-- Tasks will be dynamically loaded here -->
+        </select>
 
-      <!--Buttons-->
-      <div id="button-container">
-        <div><button class="startButton" id="start-btn">Start</button></div>
-        <button class="distraction" id="distraction-btn" disabled>
-          Distraction : 5
-        </button>
-        <button class="fail" id="fail-btn">Fail</button>
-      </div>
+        <label for="task-name pomo-count" class="label-heading">
+          Or create a new one!
+        </label>
+        
+        <label for="task-name">Task Name</label>
+        <input type="text" id="task-name">
 
-      <div id="container-short">
+        <label for="pomo-count">Pomo Count</label>
+        <input type="number" id="pomo-count" min="1" max="10">
+
         <div>
-          <button class="start-break-btn" id="start-short-btn">
-            Start Break
-          </button>
+          <button type="button" id="create-skip">Skip</button>
+          <button type="button" id="create-start">Start</button>
         </div>
-      </div>
 
-      <div id="container-long">
-        <div>
-          <button class="start-break-btn" id="start-long-btn">
-            Start Break
-          </button>
+        <div id="dont-show-container">
+          <input type="checkbox" id="dont-show">
+          <label for="dont-show">Don't show again</label>
         </div>
+      </form>
+
+      <!-- The distraction and fail button will be available if a task
+            is in progress -->
+      <button class="distraction" id="distraction-btn"  style="display:none;">
+        Distraction : 5
+      </button>
+      <button class="fail" id="fail-btn" style="display:none;">Fail</button>
+
+      <!-- The start break button will become visible after a task is complete -->
+      <button id="start-break-btn" style="display:none;">
+        Start Break
+      </button>
+    </section>
+
+    <!-- Nested divs are to prevent touching stuff below -->
+    <div id="tutorialModal" class="modal-break">
+      <div class="modal-content-short_break">
+        <p>Placeholder Tutorial Text</p>
+        <img alt="placeholder image">
       </div>
     </div>
 
@@ -149,9 +172,14 @@ document.body.innerHTML = `<!DOCTYPE html>
               <button class="button-task" id="continue-btn">
                 Continue Task
               </button>
+              <svg id="auto-continue" height="30" display="none">
+                <rect id="auto-continue-progress"></rect>
+              </svg>
             </div>
             <div class="button-task-position">
-              <button class="button-task" id="change-btn">Change Task</button>
+              <button class="button-task" id="change-btn">
+                Change Task
+              </button>
             </div>
           </div>
         </div>
@@ -165,7 +193,7 @@ document.body.innerHTML = `<!DOCTYPE html>
                     Are you sure you want to fail this pomo session?
                 </div>
                 <div id="sad-face-container">
-                    <img id="sad-face" src="../images/sad-face.png" alt="sad-face">
+                    <img id="sad-face" src="../assets/images/sad-face.png" alt="sad-face">
                 </div>
                 <div id="fail-button-container">
                     <button class="fail-buttons" id="fail-button">Fail</button>
@@ -177,9 +205,11 @@ document.body.innerHTML = `<!DOCTYPE html>
     </div>
 
     <script src="./timer.js"></script>
-    <script src="../header-comp.js"></script>
+    <script src="./tutorial.js"></script>
+    <script src="../components/header-comp/header-comp.js"></script>
   </body>
 </html>
+
 `;
 const allTasks = [];
 const newTask1 = {
@@ -255,23 +285,16 @@ describe('Test Timer functions', () => {
     expect(document.getElementById('breakCompleteModal').style.display).toBe(
       'none'
     );
-    expect(window.location.href).toEqual('../index.html');
+    expect(window.location.href).toEqual('../tasks-page/tasks.html');
   });
 
-  test('start short break function test', () => {
+  test('startBreak function test', () => {
     localStorage.clear();
     localStorage.setItem('ShortBreak', 'true');
     startBreak();
-    expect(document.getElementById('container-short').style.display).toBe(
-      'none'
-    );
-  });
-
-  test('start long break function test', () => {
-    localStorage.clear();
-    startBreak();
-    expect(document.getElementById('container-long').style.display).toBe(
-      'none'
+    expect(document.getElementById('start-break-btn').disabled).toBe(true);
+    expect(document.getElementById('start-break-btn').className).toBe(
+      'disable'
     );
   });
 
@@ -281,11 +304,8 @@ describe('Test Timer functions', () => {
 
   test('startTimer function test', () => {
     startTimer();
-    expect(document.getElementById('distraction-btn').disabled).toBe(false);
-    expect(document.getElementById('start-btn').style.display).toBe('none');
-    expect(document.getElementById('button-container').style.paddingLeft).toBe(
-      '150px'
-    );
+    expect(document.getElementById('distraction-btn').style.display).toBe('');
+    expect(document.getElementById('fail-btn').style.display).toBe('');
   });
 
   test('start function test 1', () => {
@@ -324,8 +344,9 @@ describe('Test Timer functions', () => {
     });
     failSession();
     expect(document.getElementById('failModal').style.display).toBe('none');
-    expect(window.location.href).toEqual('../index.html');
+    expect(window.location.href).toEqual('../tasks-page/tasks.html');
   });
+
   test('quit Fail Modal function test', () => {
     quitFailModal();
     expect(document.getElementById('failModal').style.display).toBe('none');
