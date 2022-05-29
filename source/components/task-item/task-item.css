@@ -46,7 +46,19 @@ drag-ind {
   grid-area: drag;
 }
 
+form {
+  grid-area: form;
 
+  align-content: center;
+  align-items: center;
+  display: grid;
+  column-gap: 10px;
+  margin:  0;
+  padding: 0;
+  max-height: 0px;
+  overflow-y: hidden;
+  transition: max-height 0.2s ease-in-out;
+}
 
 input[type="radio"]:checked + h1 {
   text-decoration: line-through solid var(--primary-color) 3px;
@@ -61,27 +73,6 @@ h1  {
   font-size: calc(20px + 0.5vw);
   grid-area: title;
   transition: text-decoration 0.2s ease-in-out;
-}
-
-form {
-  grid-area: form;
-  grid-auto-columns: 1fr 1fr 10fr 10fr 1fr 1fr 1fr;
-  grid-template-areas:
-    ". . editTitle editCount confirm cancel .";
-  align-content: center;
-  align-items: center;
-  display: grid;
-  column-gap: 10px;
-  justify-content: stretch;
-  justify-items: stretch;
-  margin:  0;
-  padding: 0;
-  height: 0;
-  overflow-y: hidden;
-}
-
-form[permit="true"] {
-  height: 100%;
 }
 
 input[type="checkbox"] {
@@ -171,17 +162,15 @@ section {
   column-gap: 10px;
   justify-content: stretch;
   justify-items: stretch;
-  margin:  10px 0px 10px;
-  opacity: 0.5;
+  margin:  20px 0px 2 0px;
   padding: 10px 0px 10px;
   transition: box-shadow 0.2s ease-in-out;
   transition: opacity 0.3s ease-in-out;
   animation: new-task;
   animation-duration: 0.3s;
-  transition: grid-template-rows 0.3s ease-in-out;
 }
 
-section:hover {
+section:hover, section:focus-within {
   box-shadow: 1px 1px 0.7rem var(--primary-color);
   opacity: 1;
 }
@@ -206,6 +195,19 @@ section:hover {
     grid-template-areas:
       "drag check title progress start edit delete"
       "form form  form  form     form  form form";
+    opacity: 0.5;
+  }
+  
+  form {
+    grid-auto-columns: 1fr 1fr 10fr 10fr 1fr 1fr 1fr;
+    grid-template-areas:
+      ". . editTitle editCount cancel confirm .";
+    justify-content: stretch;
+    justify-items: stretch;
+  }
+  
+  form[permit="true"] {
+    max-height: 100px;
   }
   
   input[type="checkbox"] {
@@ -230,7 +232,28 @@ section:hover {
     grid-template-areas:
       "title title title title"
       "progress progress progress progress"
-      "check start edit delete";
+      "check start edit delete"
+      "form form form form";
+    opacity: 1;
+    justify-content: center;
+    justify-items: center;
+  }
+  
+  form {
+    grid-auto-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-areas:
+      "editTitle editTitle"
+      "editCount editCount"
+      "cancel confirm";
+  }
+  
+  form[permit="true"] {
+    max-height: 300px;
+  }
+  
+  input[content="title"], input[content="count"] {
+    width: 90%;
   }
   
   drag-ind {

@@ -14,7 +14,6 @@ let allTasks;
 // Call the initializer function when the window is loaded.
 window.onload = timerPageInit;
 
-// TODO: More detailed comments may be required.
 /**
  * Initialize the timer page. Render required HTML elements.
  */
@@ -72,13 +71,13 @@ function timerPageInit() {
   localStorage.setItem('isPomo', 'false');
 
   // render current task name to timer page
-  const id = JSON.parse(localStorage.getItem('currentTask'));
-  allTasks = JSON.parse(localStorage.getItem('allTasks'));
+  const id = localStorage.getItem('currentTask') || null;
+  allTasks = JSON.parse(localStorage.getItem('allTasks') || '[]');
 
   // Checks to see i the task id still exists. If it no longer exists, remove
   // the current task and hide the deelct task tick
   let taskStillExists = false;
-  if (allTasks && id !== '') {
+  if (allTasks && id) {
     for (let i = 0; i < allTasks.length; i++) {
       if (allTasks[i].id === id) {
         currentTaskIndex = i;
@@ -102,9 +101,6 @@ function timerPageInit() {
     displayBreak();
   } else {
     localStorage.setItem('isPomo', 'false');
-    document.getElementById(
-      'distraction-btn'
-    ).innerHTML = `Distraction : ${distractCounter}`;
 
     timerComp.dataset.minutesLeft = localStorage.getItem('timerMinutes');
     timerComp.dataset.secondsLeft = 0;
@@ -163,9 +159,32 @@ function taskSelectInit() {
 }
 
 /**
+ * Change the style of current timer circle.
+ * @param {number} percent percentage of current progress bar.
+ */
+function setProgress(percent) {
+  circle = document.getElementById('progress-ring-circle');
+  const r = circle.getAttribute('r');
+  const radiust = parseInt(r, 10);
+  const circumferencet = radiust * 2 * Math.PI;
+
+  const offset = (percent / 100) * circumferencet;
+  document.getElementById(
+    'progress-ring-circle'
+  ).style.strokeDashoffset = -offset;
+}
+
+/**
+ * Reset progress ring percentage to 0
+ */
+function resetProgressRing() {
+  circle.style.strokeDashoffset = 0;
+}
+
+/**
  * Currently, the HTML element's ID should be the same as the name for the local storage.
  * @param {string} lengthType the identifier for which timer's length.
- *
+ */
 function updateTimerLength(lengthType) {
   localStorage.setItem(lengthType, document.getElementById(lengthType).value);
   if (
@@ -233,13 +252,15 @@ function autoContinue() {
  */
 function continueTask() {
   document.getElementById('breakCompleteModal').style.display = 'none';
-  document.body.style.backgroundImage =
-    'linear-gradient(to right,#E0EAFC,#CFDEF3)';
+  document.body.style.background =
+    'linear-gradient(var(--gradient-light),var(--gradient-medium))';
 
   // Making the start button the only visible button
   hideButtons();
   document.getElementById('start-btn').style.display = '';
 
+  resetProgressRing();
+  renderTimer(localStorage.getItem('timerMinutes'), 0);
   // resetProgressRing();
   document.getElementById(
     'distraction-btn'
@@ -279,14 +300,14 @@ function displayBreak() {
   setTimeout(() => {
     // resetProgressRing();
     if (localStorage.getItem('shortBreak') === 'true') {
-      document.body.style.backgroundImage =
-        'linear-gradient(to right,#74EBD5,#ACB6E5)';
+      document.body.style.background =
+        'linear-gradient(var(--spice-color),var(--gradient-medium))';
       document.getElementById('currTask').innerHTML = 'Short Break';
       document.getElementById('deselect-task').style.display = 'none';
       setTimer(localStorage.getItem('shortBreakMinutes'), 0);
     } else {
-      document.body.style.backgroundImage =
-        'linear-gradient(to right,#ACB6E5,#74EBD5)';
+      document.body.style.background =
+        'linear-gradient(var(--gradient-medium),var(--spice-color))';
       document.getElementById('currTask').innerHTML = 'Long Break';
       document.getElementById('deselect-task').style.display = 'none';
       setTimer(localStorage.getItem('longBreakMinutes'), 0);
@@ -319,7 +340,7 @@ function startBreak() {
  * Deselects the current task
  */
 function deselectTask() {
-  localStorage.setItem('currentTask', '""');
+  localStorage.removeItem('currentTask');
   currentTaskIndex = -1;
   document.getElementById('deselect-task').style.display = 'none';
   document.getElementById('currTask').textContent = 'No Task Selected';
@@ -382,9 +403,30 @@ function startTimer() {
   isFailed = true;
 
   hideButtons();
-  document.getElementById('distraction-btn').style.display = '';
+  document.querySelector('#distraction-set').style.display = '';
   document.getElementById('fail-btn').style.display = '';
+  
+  start(localStorage.getItem('timerMinutes'), 0);
+}
 
+/**
+ * Set a timer that count down.
+ * @param {integer} mins minute of timer
+ * @param {integer} secs second of timer
+ */
+function start(mins, secs) {
+  // Hide nav buttons in header
+  document.querySelector('header-comp').page = 'timerRunning';
+
+  const startTime = new Date();
+  // display correct distraction counter
+  distractCounter = 0;
+  console.log('fsafasfsadfadsfasdf');
+  document.querySelector('#distraction-btn').src =
+    '/assets/images/tomo-excited.png';
+  const totalSeconds = mins * 60 + secs;
+  renderTimer(mins, secs);
+  secondsInterval = setInterval(secondsTimer, 500, startTime, totalSeconds);
   // display correct distraction counter
   distractCounter = 0;
   document.getElementById(
@@ -431,12 +473,18 @@ function renderTitle() {
   }
 }
 
-// TODO: Maybe more detailed comments on this.
 /**
  * The function to be called when a timer runs out, or in another word when the
  * task is finished. It should set the related HTML elements properly and stop the timer.
  */
 function finishedTask() {
+  
+  // Set the header componenet's name back to timer to indicate the timer is no
+  // longer running
+  document.querySelector('header-comp').page = 'timer';
+  // console.log('Finished Task');
+  clearInterval(secondsInterval);
+  
   let counter = Number(localStorage.getItem('sessionCounter'));
   counter += 1;
   let todayDistract = Number(localStorage.getItem('distractCounter'));
@@ -548,9 +596,28 @@ function createTask() {
  */
 function distractionCount() {
   distractCounter += 1;
-  document.getElementById(
-    'distraction-btn'
-  ).innerHTML = `Distraction : ${distractCounter}`;
+
+  let source;
+
+  switch (distractCounter) {
+    case 0:
+      source = '/assets/images/tomo-excited.png';
+      break;
+    case 1:
+      source = '/assets/images/tomo-happy.png';
+      break;
+    case 2:
+      source = '/assets/images/tomo-neutral.png';
+      break;
+    case 3:
+      source = '/assets/images/tomo-meh.png';
+      break;
+    default:
+      source = '/assets/images/tomo-bleh.png';
+      break;
+  }
+
+  document.querySelector('#distraction-btn').src = source;
 }
 
 /**
