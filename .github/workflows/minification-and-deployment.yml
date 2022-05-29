@@ -1,0 +1,66 @@
+name: Minification and Firebase Deployment
+
+on:
+  push:
+      branches:
+        - main
+
+jobs:
+
+  minify:
+    name: generating minified html/js/css
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Compress HTML, CSS and JS files.
+      uses: nizarmah/auto-minify@master
+      with:
+        directory: 'source'
+        output: 'minified'
+        overwrite: true
+
+    - name: Set up deployment
+      run: |
+        mkdir deploy
+        mkdir deploy/assets
+        mkdir deploy/assets/audio
+        mkdir deploy/assets/images
+        mkdir deploy/components
+        mkdir deploy/components/header-comp
+        mkdir deploy/components/task-item
+        mkdir deploy/components/task-list
+        mkdir deploy/stats-page
+        mkdir deploy/tasks-page
+        mkdir deploy/timer-page
+        mkdir deploy/.github
+        mkdir deploy/.github/workflows
+        cp minified/main.* deploy/
+        cp minified/header-comp.* deploy/components/header-comp
+        cp minified/task-item.* deploy/components/task-item
+        cp minified/task-list.* deploy/components/task-list
+        cp minified/stats.* deploy/stats-page
+        cp minified/tasks.* deploy/tasks-page
+        cp minified/timer.* deploy/timer-page
+        cp minified/tutorial.js deploy/timer-page/
+        cp source/index.html deploy/index.html
+        cp source/timer-page/timer.html deploy/timer-page/
+        cp source/tasks-page/tasks.html deploy/tasks-page/
+        cp source/stats-page/stats.html deploy/stats-page/
+        cp -a source/assets/images/. deploy/assets/images/
+        cp -a source/assets/audio/. deploy/assets/audio/
+        cp source/.firebaserc deploy/
+        cp source/firebase.json deploy/
+      
+    - name: Deploy build files
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        entrypoint: "/home/runner/work/cse112-sp22-group8/cse112-sp22-group8/deploy"
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_POMODORO_TIMER_C1A2A }}'
+        channelId: live
+        projectId: pomodoro-timer-c1a2a
+
+      
+        
