@@ -1,3 +1,5 @@
+// import {start} from '../../timer-page/timer';
+
 class TimerButtons extends HTMLElement {
     constructor() {
         super();
@@ -100,7 +102,7 @@ class TimerButtons extends HTMLElement {
 
         const chooseTaskSelect = document.createElement('select');
         chooseTaskSelect.setAttribute('id', 'choose-task');
-        chooseTaskSelect.addEventListener('input', chooseTask);
+        chooseTaskSelect.addEventListener('input', () => this.chooseTask());
 
         const defaultTaskOption = document.createElement('option');
         defaultTaskOption.setAttribute('value', '');
@@ -192,6 +194,8 @@ class TimerButtons extends HTMLElement {
         continueTaskPosition.appendChild(autoContinue)
         autoContinue.appendChild(autoContinueProgress)
         changeTaskButton.addEventListener('click', () => this.changeTask())
+        continueTaskButton.addEventListener('click', () => this.continueTask())
+
         return breakCompleteModal
     }
 
@@ -201,7 +205,7 @@ class TimerButtons extends HTMLElement {
         const modalText = this.createElementWithAttributes('div', 'class', 'modal-text')
         const failHeading = this.createElementWithAttributes('div', 'class', 'heading-fail', 'Are you sure you want to fail this pomo session?')
         const sadFaceContainer = this.createElementWithAttributes('div', 'class', 'sad-face-container')
-        const sadFaceImg = this.createElementWithAttributes('img', ['id', 'src', 'alt'], ['sad-face', '../assets/images/sad-face.png', 'sad-face'])
+        const sadFaceImg = this.createElementWithAttributes('img', ['id', 'src', 'alt'], ['sad-face', './assets/images/sad-face.png', 'sad-face'])
         const failButtonContainer = this.createElementWithAttributes('div', 'id', 'fail-button-container')
         const failButton = this.createElementWithAttributes('button', ['id', 'class'], ['fail-button', 'fail-buttons'], 'Fail')
         const cancelButton = this.createElementWithAttributes('button', ['id', 'class'], ['fail-button', 'Cancel-buttons'], 'Cancel')
@@ -350,7 +354,6 @@ class TimerButtons extends HTMLElement {
         // Making the start break button the only one visible
         this.shadowRoot.getElementById('start-break-btn').disabled = true;
         this.shadowRoot.getElementById('start-break-btn').className = 'disable';
-
         if (localStorage.getItem('shortBreak') === 'true') {
             start();
         } else {
@@ -402,7 +405,7 @@ class TimerButtons extends HTMLElement {
      */
     changeTask() {
         this.shadowRoot.getElementById('breakCompleteModal').style.display = 'none';
-        window.location.href = '../tasks-page/tasks.html';
+        window.location.href = './tasks-page/tasks.html';
     }
 
     /**
@@ -410,7 +413,7 @@ class TimerButtons extends HTMLElement {
      */
     failSession() {
         this.shadowRoot.getElementById('failModal').style.display = 'none';
-        window.location.href = '../tasks-page/tasks.html';
+        window.location.href = './tasks-page/tasks.html';
     }
 
     /**
@@ -421,6 +424,75 @@ class TimerButtons extends HTMLElement {
         // add confirmation functionality to back button again
         window.history.pushState(null, document.title, window.location.href);
         this.shadowRoot.getElementById('failModal').style.display = 'none';
+    }
+
+    /**
+     * Continue on current task, start another pomo.
+     */
+    continueTask() {
+        this.renderBreakCompleteModal(false)
+        document.body.style.backgroundImage =
+            'linear-gradient(to right,#E0EAFC,#CFDEF3)';
+
+        // Making the start button the only visible button
+        this.renderStartBreakButton(false)
+        this.renderStartButton(true)
+        this.distractCounter = 0
+        // resetProgressRing();
+        this.shadowRoot.getElementById(
+            'distraction-btn'
+        ).innerHTML = `Distraction : ${distractCounter}`;
+        setTimer(localStorage.getItem('timerMinutes'), 0);
+
+        if (this.currentTaskIndex !== -1) {
+            document.getElementById('currTask').innerHTML =
+                this.allTasks[this.currentTaskIndex].name;
+            document.getElementById('deselect-task').style.display = '';
+        } else {
+            document.getElementById('currTask').innerHTML = 'No Task Selected';
+            document.getElementById('deselect-task').style.display = 'none';
+        }
+        localStorage.setItem(
+            'todayPomo',
+            Number(localStorage.getItem('todayPomo')) + 1
+        );
+    }
+
+    renderBreakCompleteModal(show) {
+        if (show) {
+            this.shadowRoot.getElementById('breakCompleteModal').style.display = 'block';
+        } else {
+            this.shadowRoot.getElementById('breakCompleteModal').style.display = 'none';
+        }
+    }
+
+    renderStartBreakButton(show, disable) {
+        if (show) {
+            this.shadowRoot.getElementById('start-break-btn').style.display = '';
+
+        } else {
+            this.shadowRoot.getElementById('start-break-btn').style.display = 'none';
+        }
+        if (disable) {
+            this.shadowRoot.getElementById('start-break-btn').disabled = true;
+            this.shadowRoot.getElementById('start-break-btn').className = 'disable';
+        } else {
+            this.shadowRoot.getElementById('start-break-btn').disabled = false;
+            this.shadowRoot.getElementById('start-break-btn').className = '';
+        }
+    }
+
+    renderStartButton(show) {
+        if (show) {
+            this.shadowRoot.getElementById('start-btn').style.display = '';
+        } else {
+            this.shadowRoot.getElementById('start-btn').style.display = 'none';
+        }
+    }
+
+    renderDisplayBreak() {
+        this.shadowRoot.getElementById('distraction-btn').style.display = 'none'
+        this.shadowRoot.getElementById('fail-btn').style.display = 'none'
     }
 
 }
