@@ -3,11 +3,6 @@
  * also implements the behaviors of header.
  */
 
-/**
- * Shows the current date and the current amount of cycles completed.
- * Gets completed cycle count from local storage, if it exists. Increments and
- * saves cycle count to local storage after every completed session.
- */
 class HeaderComp extends HTMLElement {
   /**
    * Constructor which attaches a shadow root to this element in open mode
@@ -75,13 +70,6 @@ class HeaderComp extends HTMLElement {
    * Called when the header is applied to the DOM; Sets up the header.
    */
   connectedCallback() {
-    // Get the session counter from storage.
-    this.completedCycles =
-      localStorage.getItem('sessionCounter') === null
-        ? 0
-        : localStorage.getItem('sessionCounter');
-    this.isNewCycle = this.completedCycles % 4 === 0 ? 'true' : 'false';
-
     // Creates the nav element which houses the info of the header
     const section = document.createElement('section');
 
@@ -97,11 +85,6 @@ class HeaderComp extends HTMLElement {
 
     brand.appendChild(logo);
     brand.appendChild(title);
-
-    // Section of the header which shows dots and filled dots to represent
-    // progress to a long break.
-    const count = document.createElement('div');
-    count.setAttribute('id', 'cycle-count');
 
     const navBar = document.createElement('nav');
 
@@ -142,7 +125,6 @@ class HeaderComp extends HTMLElement {
 
     // Append the date and section to the nav element
     section.appendChild(brand);
-    section.appendChild(count);
     section.appendChild(navBar);
 
     // Appened the nav and styling to the shadow root.
@@ -153,9 +135,6 @@ class HeaderComp extends HTMLElement {
     this.shadowRoot.appendChild(styleSheet);
     this.shadowRoot.appendChild(section);
 
-    // Setup and render the circles in the cycle counter as well as the date.
-    this.renderCounter();
-    this.renderCompletedCount();
     const settings = this.renderSettings();
   }
 
@@ -167,64 +146,10 @@ class HeaderComp extends HTMLElement {
    * @param {String} newValue The new value of the given attribute
    */
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'completedcycles' || name === 'isnewcycle') {
-      const circleSection = this.shadowRoot.querySelector('#cycle-count');
-
-      // check if section is loaded
-      if (circleSection) {
-        circleSection.innerHTML = '';
-        this.renderCounter();
-        this.renderCompletedCount();
-      }
-    }
-
     if (name === 'page' && this.shadowRoot.querySelector('nav')) {
       this.shadowRoot
         .querySelector('nav')
         .setAttribute('hidden', newValue === 'timerRunning');
-    }
-  }
-
-  /**
-   * Renders the pomo counter in the header (bottom left).
-   */
-  renderCounter() {
-    if (this.completedCycles === '0' || this.isNewCycle === 'true') {
-      for (let i = 0; i < 4; i++) {
-        const newCycle = document.createElement('span');
-        newCycle.setAttribute('class', 'dot');
-        this.shadowRoot.querySelector('#cycle-count').prepend(newCycle);
-      }
-    } else if (this.completedCycles % 4 !== 0) {
-      for (let i = 0; i < 4 - (this.completedCycles % 4); i++) {
-        const newCycle = document.createElement('span');
-        newCycle.setAttribute('class', 'dot');
-        this.shadowRoot.querySelector('#cycle-count').prepend(newCycle);
-      }
-    }
-  }
-
-  /**
-   * Creates and renders the filled dots using the new cycle and completed
-   * cycles properties.
-   */
-  renderCompletedCount() {
-    if (
-      this.completedCycles % 4 === 0 &&
-      this.completedCycles !== '0' &&
-      this.isNewCycle === 'false'
-    ) {
-      for (let i = 0; i < 4; i++) {
-        const newCycle = document.createElement('span');
-        newCycle.setAttribute('class', 'filled-dot');
-        this.shadowRoot.getElementById('cycle-count').prepend(newCycle);
-      }
-    } else {
-      for (let i = 0; i < this.completedCycles % 4; i++) {
-        const newCycle = document.createElement('span');
-        newCycle.setAttribute('class', 'filled-dot');
-        this.shadowRoot.getElementById('cycle-count').prepend(newCycle);
-      }
     }
   }
 
