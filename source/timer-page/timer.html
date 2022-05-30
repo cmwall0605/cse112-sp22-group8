@@ -9,6 +9,34 @@
     <link rel="shortcut icon" type="image/svg" href="/assets/images/logo-white.svg" />
 
     <title id="title_timer">Pomodoro Timer</title>
+
+    <!-- Styles for pomo count -->
+    <style>
+      #pomo-count-progress > span {
+        height: 10px;
+        width: 10px;
+        padding: 10px;
+        margin: 5px;
+        background-color: var(--light-color);
+        border-radius: 77%;
+        border: 2px solid var(--light-color);
+        display: inline-block;
+        
+      }
+
+      .completed-task {
+        background-color: blueviolet !important;
+      }
+      
+      .not-completed-task {
+        background-color: blue !important;
+      }
+      .current-task {
+        background-color: red !important; 
+      }
+
+    </style>
+
   </head>
 
   <body onload="timerPageInit()">
@@ -45,9 +73,6 @@
         <h4>:</h4>
         <h4 id="seconds"></h4>
       </span>
-
-      <span id="pomo-count-progress"></span>
-
       <svg class="progress-ring" height="27.5rem" width="27.5rem">
         <circle
           class="progress-ring-circle"
@@ -61,6 +86,8 @@
         />
       </svg>
     </div>
+
+    <div id="pomo-count-progress"></div>
 
     <!--Buttons-->
     <section id="button-container" class="container">

@@ -119,6 +119,9 @@ function timerPageInit() {
   }
   // render starting value of timer
 
+  // Finally render the currPomo circles (updates on finishing task)
+  renderPomoCount();
+
   /* Show fail on back */
   window.history.pushState(null, document.title, window.location.href);
   window.addEventListener('popstate', () => {
@@ -535,6 +538,9 @@ function finishedTask() {
   if (localStorage.getItem('autoContinue') === 'true') {
     autoContinue();
   }
+
+  renderPomoCount();
+
 }
 
 /**
@@ -627,6 +633,33 @@ function quitFailModal() {
   // add confirmation functionality to back button again
   window.history.pushState(null, document.title, window.location.href);
   document.getElementById('failModal').style.display = 'none';
+}
+
+function renderPomoCount() {
+  //clear existing circles
+  while (document.querySelector('#pomo-count-progress').firstChild) {
+    document.querySelector('#pomo-count-progress').removeChild(document.querySelector('#pomo-count-progress').firstChild);
+  }
+
+  let numPomos = allTasks[currentTaskIndex]['number'];
+  let completedPomos = allTasks[currentTaskIndex]['current'];
+
+  //render the completed pomos
+  for (let i = 0; i < completedPomos; i++) {
+    let completedTask = document.createElement('span');
+    completedTask.setAttribute('class', 'completed-task');
+    document.querySelector('#pomo-count-progress').appendChild(completedTask);
+  } 
+  //render current pomo
+    let currentTask = document.createElement('span');
+    currentTask.setAttribute('class', 'current-task');
+    document.querySelector('#pomo-count-progress').appendChild(currentTask);
+  //render remaining pomos
+  for (let i = 0; i < numPomos - completedPomos - 1; i++) {
+    let finishedTask = document.createElement('span');
+    finishedTask.setAttribute('class', 'not-completed-task');
+    document.querySelector('#pomo-count-progress').appendChild(finishedTask);
+  } 
 }
 
 if (typeof exports !== 'undefined') {
