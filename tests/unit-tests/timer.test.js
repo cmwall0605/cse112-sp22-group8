@@ -249,7 +249,8 @@ describe('Test Timer functions', () => {
     localStorage.setItem('allTasks', JSON.stringify(allTasks));
   });
 
-  test('Set Progress function test', () => {
+  // Tests to be exported out to timer-component.test.js
+  /* test('Set Progress function test', () => {
     setProgress(50);
     expect(
       document.getElementById('progress-ring-circle').style.strokeDashoffset
@@ -261,7 +262,7 @@ describe('Test Timer functions', () => {
     expect(
       document.getElementById('progress-ring-circle').style.strokeDashoffset
     ).toBe('0');
-  });
+  }); */
 
   test('display break complete function test', () => {
     window.HTMLMediaElement.prototype.play = () => {
@@ -308,6 +309,8 @@ describe('Test Timer functions', () => {
     expect(document.getElementById('fail-btn').style.display).toBe('');
   });
 
+  // Tests that need to be rewritten/maybe exported to timer component tests
+  /*
   test('start function test 1', () => {
     start(1, 9);
     expect(document.getElementById('minutes').innerHTML).toBe('01');
@@ -320,7 +323,7 @@ describe('Test Timer functions', () => {
     expect(document.getElementById('minutes').innerHTML).toBe('15');
     expect(document.getElementById('seconds').innerHTML).toBe('30');
     expect(document.getElementById('title_timer').innerHTML).toBe('15:30');
-  });
+  }); */
 
   test('distraction count', () => {
     distractionCount();

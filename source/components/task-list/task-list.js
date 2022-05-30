@@ -23,7 +23,7 @@ class TaskList extends HTMLElement {
       mode: 'open',
     });
 
-    this.allTasks = null;
+    this.allTasks = [];
 
     // variables for drag and drop functions
     this.dropzone = null;
@@ -108,14 +108,17 @@ class TaskList extends HTMLElement {
 
     // (CREATE) Create the name input
     const nameInput = document.createElement('input');
-    nameInput.placeholder = 'Title';
+    nameInput.placeholder = 'My new task...';
+    nameInput.title = 'Give your task a title';
     nameInput.maxLength = 26;
     nameInput.required = true;
     nameInput.setAttribute('content', 'title');
 
-    // (CREATE) Creat the count input
+    // (CREATE) Create the count input
     const countInput = document.createElement('input');
-    countInput.placeholder = 'Pomo Count';
+    countInput.placeholder = '# of work sessions...';
+    countInput.title =
+      'Estimate how many pomodoro sessions you will need for this task';
     countInput.type = 'number';
     countInput.min = 1;
     countInput.max = 10;
@@ -126,6 +129,7 @@ class TaskList extends HTMLElement {
     const submitButton = document.createElement('button');
     submitButton.className = 'icon';
     submitButton.textContent = 'add_circle';
+    submitButton.title = 'Add Task';
     submitButton.type = 'submit';
 
     // (CREATE) Append the form info to the form
@@ -171,9 +175,13 @@ class TaskList extends HTMLElement {
       this.allTasks = [];
     } else {
       this.allTasks = JSON.parse(retrievedObject);
-      if (this.allTasks.length > 0) welcomeMessage.remove();
-      for (let i = 0; i < this.allTasks.length; i++) {
-        this.renderTask(this.allTasks[i]);
+      if (this.allTasks) {
+        if (this.allTasks.length > 0) welcomeMessage.remove();
+        for (let i = 0; i < this.allTasks.length; i++) {
+          this.renderTask(this.allTasks[i]);
+        }
+      } else {
+        this.allTasks = [];
       }
     }
 
@@ -212,26 +220,38 @@ class TaskList extends HTMLElement {
     console.log(event.target);
     const itemToDelete = event.target.getRootNode().host;
     const { name, id } = itemToDelete;
-
-    const deleteDialog = this.shadowRoot.querySelector('dialog');
-    deleteDialog.querySelector('p').textContent = `Delete Task "${name}"?`;
-    const confirmButton = deleteDialog.querySelector('button[type="confirm"]');
-    confirmButton.addEventListener(
-      'click',
-      () => {
-        for (let i = 0; i < this.allTasks.length; i++) {
-          if (this.allTasks[i].id === id) {
-            this.allTasks.splice(i, 1);
-            break;
+    if ('ontouchstart' in window) {
+      const deleteDialog = this.shadowRoot.querySelector('dialog');
+      deleteDialog.querySelector('p').textContent = `Delete Task "${name}"?`;
+      const confirmButton = deleteDialog.querySelector(
+        'button[type="confirm"]'
+      );
+      confirmButton.addEventListener(
+        'click',
+        () => {
+          for (let i = 0; i < this.allTasks.length; i++) {
+            if (this.allTasks[i].id === id) {
+              this.allTasks.splice(i, 1);
+              break;
+            }
           }
+          localStorage.setItem('allTasks', JSON.stringify(this.allTasks));
+          itemToDelete.remove();
+          deleteDialog.close();
+        },
+        { once: true }
+      );
+      deleteDialog.showModal();
+    } else {
+      for (let i = 0; i < this.allTasks.length; i++) {
+        if (this.allTasks[i].id === id) {
+          this.allTasks.splice(i, 1);
+          break;
         }
-        localStorage.setItem('allTasks', JSON.stringify(this.allTasks));
-        itemToDelete.remove();
-        deleteDialog.close();
-      },
-      { once: true }
-    );
-    deleteDialog.showModal();
+      }
+      localStorage.setItem('allTasks', JSON.stringify(this.allTasks));
+      itemToDelete.remove();
+    }
   }
 
   /**
@@ -315,10 +335,7 @@ class TaskList extends HTMLElement {
    *                      should be the button of the task to be played.
    */
   static playTask(event) {
-    localStorage.setItem(
-      'currentTask',
-      JSON.stringify(event.target.getRootNode().host.id)
-    );
+    localStorage.setItem('currentTask', event.target.getRootNode().host.id);
     window.location = '/timer-page/timer.html';
   }
 
