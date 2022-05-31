@@ -3,6 +3,15 @@ const {
 } = require('../../source/components/timer-comp/timer-comp.js');
 
 describe('Timer Componenet Test Constructor', () => {
+  beforeEach(() => {
+    document.body.innerHTML =
+      '<div id = "test"> ' +
+      '</div>' +
+      '<button id="button" />' +
+      '<input type="text" id="task-name">' +
+      '<input type="text" id="task-num">' +
+      '<input type="text" id="task-note">';
+  });
   test('Test that timer-comp can be created properly', () => {
     const inputTimer = {
       id: 'minutes',
@@ -13,8 +22,7 @@ describe('Timer Componenet Test Constructor', () => {
 
     // Create Element
     const timerComponent = document.createElement('timer-comp');
-
-    timerComponent.connectedCallback();
+    document.getElementById('test').appendChild(timerComponent);
 
     // Setup testElement
     timerComponent.setAttribute('id', inputTimer.id);
@@ -39,8 +47,7 @@ describe('Timer Componenet Test Constructor', () => {
 
     // Create Element
     const timerComponent = document.createElement('timer-comp');
-
-    timerComponent.connectedCallback();
+    document.getElementById('test').appendChild(timerComponent);
 
     // Setup testElement
     timerComponent.setAttribute('id', inputTimer.id);
@@ -70,7 +77,7 @@ describe('Timer Component Test Functions', () => {
   test('Test Set Progress', () => {
     // Create Timer Componeent
     const timerComponent = document.createElement('timer-comp');
-    timerComponent.connectedCallback();
+    document.getElementById('test').appendChild(timerComponent);
 
     // Call function
     timerComponent.setProgress(60);
@@ -85,7 +92,7 @@ describe('Timer Component Test Functions', () => {
   test('Test StopTimer', () => {
     // Create Timer Componeent
     const timerComponent = document.createElement('timer-comp');
-    timerComponent.connectedCallback();
+    document.getElementById('test').appendChild(timerComponent);
 
     // Call function
     timerComponent.stopTimer();
@@ -95,7 +102,7 @@ describe('Timer Component Test Functions', () => {
   test('Test secondsTimer', () => {
     // Create Timer Componeent
     const timerComponent = document.createElement('timer-comp');
-    timerComponent.connectedCallback();
+    document.getElementById('test').appendChild(timerComponent);
 
     // Call function
     timerComponent.secondsTimer(100, 10000);
