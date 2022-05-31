@@ -1,110 +1,101 @@
-// const { TimerButtons } = require('../../source/components/timer-buttons/timer-buttons');
+const {
+  TimerButtons,
+} = require('../../source/components/timer-buttons/timer-buttons');
 
-// /**
-//  * Created a mock local storage object since local storage does not exist in the
-//  * jest enviornment.
-//  * Inspired By:
-//  * https://stackoverflow.com/questions/57092154/how-to-test-img-onload-using-jest
-//  */
-//  class MockLocalStorage {
-//     cosntructor() {
-//       this.store = {};
-//     }
+/**
+ * Created a mock local storage object since local storage does not exist in the
+ * jest enviornment.
+ * Inspired By:
+ * https://stackoverflow.com/questions/57092154/how-to-test-img-onload-using-jest
+ */
+class MockLocalStorage {
+  cosntructor() {
+    this.store = {};
+  }
 
-//     clear() {
-//       this.store = {};
-//     }
+  clear() {
+    this.store = {};
+  }
 
-//     getItem(key) {
-//       return this.store[key] || null;
-//     }
+  getItem(key) {
+    return this.store[key] || null;
+  }
 
-//     setItem(key, value) {
-//       this.store[key] = String(value);
-//     }
+  setItem(key, value) {
+    this.store[key] = String(value);
+  }
 
-//     removeItem(key) {
-//       delete this.store[key];
-//     }
-//   }
+  removeItem(key) {
+    delete this.store[key];
+  }
+}
 
-//   // Set up the mock local storage as the global local storage
-//   global.localStorage = new MockLocalStorage();
+// Set up the mock local storage as the global local storage
+global.localStorage = new MockLocalStorage();
 
-// describe('Timer Button Test Constructor', () => {
-//     const allTasks = [];
+describe('Timer Button Test Constructor', () => {
+  const allTasks = [];
 
-//     const newTask1 = {
-//         id: '123456',
-//         completed: false,
-//         name: 'Task1',
-//         number: 5,
-//         current: 0,
-//         note: 'OK1',
-//     };
+  const newTask1 = {
+    id: '123456',
+    completed: false,
+    name: 'Task1',
+    number: 5,
+    current: 0,
+    note: 'OK1',
+  };
 
-//     const newTask2 = {
-//         id: '333333',
-//         completed: false,
-//         name: 'Task2',
-//         number: 6,
-//         current: 1,
-//         note: 'OK2',
-//     };
+  const newTask2 = {
+    id: '333333',
+    completed: false,
+    name: 'Task2',
+    number: 6,
+    current: 1,
+    note: 'OK2',
+  };
 
-//     const newTask3 = {
-//         id: '555555',
-//         completed: false,
-//         name: 'Task3',
-//         number: 7,
-//         current: 6,
-//         note: 'OK3',
-//     };
+  const newTask3 = {
+    id: '555555',
+    completed: false,
+    name: 'Task3',
+    number: 7,
+    current: 6,
+    note: 'OK3',
+  };
 
-//     allTasks.push(newTask1);
-//     allTasks.push(newTask2);
-//     allTasks.push(newTask3);
-//     beforeEach(() => {
-//         localStorage.clear();
-//         localStorage.setItem('allTasks', JSON.stringify(allTasks));
-//         document.body.innerHTML =
-//           '<div id = "test"> ' +
-//           '</div>' +
-//           '<button id="button" />' +
-//           '<input type="text" id="task-name">' +
-//           '<input type="text" id="task-num">' +
-//           '<input type="text" id="task-note">';
-//     });
+  allTasks.push(newTask1);
+  allTasks.push(newTask2);
+  allTasks.push(newTask3);
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('allTasks', JSON.stringify(allTasks));
+    document.body.innerHTML =
+      '<div id = "test"> ' +
+      '</div>' +
+      '<button id="button" />' +
+      '<input type="text" id="task-name">' +
+      '<input type="text" id="task-num">' +
+      '<input type="text" id="task-note">';
+  });
 
-//     // test('Test if TimerButtons are created properly', () => {
-//     //     // Create Element
-//     //     const timerButtons = document.createElement('timer-buttons');
+  test('Test ConnectedCallback', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
 
-//     //     // Expect timerButtons elements
-//     //     expect(timerButtons.currentTaskIndex).toBe(-1);
-//     //     expect(timerButtons.distractCounter).toBe(0);
-//     //     expect(timerButtons.isFailed).toBe(false);
-//     //     expect(timerButtons.allTasks).toEqual(JSON.parse(localStorage.getItem('allTasks')));
-//     // });
+    // Create Spies for functions called in connectedCallback
+    const breakModal = jest.spyOn(timerButtons, 'createBreakEndDialog');
+    const failDialog = jest.spyOn(timerButtons, 'createFailDialog');
+    const buttonContainer = jest.spyOn(timerButtons, 'createButtons');
+    const createTaskForm = jest.spyOn(timerButtons, 'buildCreateTaskForm');
+    document.getElementById('test').appendChild(timerButtons);
 
-//     test('Test ConnectedCallback', () => {
-//         //Create Element
-//         const timerButtons = document.createElement('timer-buttons');
-
-//         // Create Spies for functions called in connectedCallback
-//         const breakModal = jest.spyOn(timerButtons, 'createBreakEndDialog');
-//         const failDialog = jest.spyOn(timerButtons, 'createFailDialog');
-//         const buttonContainer = jest.spyOn(timerButtons, 'createButtons');
-//         const createTaskForm = jest.spyOn(timerButtons, 'buildCreateTaskForm');
-//         document.getElementById('test').appendChild(timerButtons);
-
-//         // Expect check if the function is called
-//         expect(breakModal).toHaveBeenCalled();
-//         expect(failDialog).toHaveBeenCalled();
-//         expect(buttonContainer).toHaveBeenCalled();
-//         expect(createTaskForm).toHaveBeenCalled();
-//     });
-// });
+    // Expect check if the function is called
+    expect(breakModal).toHaveBeenCalled();
+    expect(failDialog).toHaveBeenCalled();
+    expect(buttonContainer).toHaveBeenCalled();
+    expect(createTaskForm).toHaveBeenCalled();
+  });
+});
 
 // describe('Test Timer Buttons functions', () => {
 //     const allTasks = [];
