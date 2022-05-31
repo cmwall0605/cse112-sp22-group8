@@ -202,117 +202,152 @@ describe('Test Timer Buttons functions', () => {
     timerButtons.hideButtons();
 
     // Expect check
-    // TODO: eslint-disable-next-line
+    // TODO: LINTING ISSUE fix
     //   for (const el of timerButtons.shadowRoot.querySelector('section').children) {
     //       expect(el.style.display).toBe('none');
     //   }
   });
 
-  // test('Test setupBreak', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('Test setupBreak', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     timerButtons.setupBreak();
+    // Call Function
+    timerButtons.setupBreak();
 
-  //     // Expect check
-  //     expect(timerButtons.shadowRoot.querySelector('#break-button').style.display).toBe('');
-  // });
+    // Expect check
+    expect(
+      timerButtons.shadowRoot.querySelector('#break-button').style.display
+    ).toBe('');
+  });
 
-  // test('Test displayBreakComplete; isAuto == true', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('Test displayBreakComplete; isAuto == true', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     timerButtons.displayBreakComplete(true);
+    // Call Function
+    timerButtons.displayBreakComplete(true);
 
-  //     // Expect check.
-  //     expect(timerButtons.shadowRoot.getElementById('auto-continue').style.display).toBe('inline-block');
-  //     expect(timerButtons.shadowRoot.getElementById('auto-continue-progress').getAttribute('running')).toBe('true');
-  //     expect(timerButtons.shadowRoot.getElementById('continue-btn').style.display).toBe('none');
-  // });
+    // Expect check.
+    expect(
+      timerButtons.shadowRoot.getElementById('auto-continue').style.display
+    ).toBe('inline-block');
+    expect(
+      timerButtons.shadowRoot
+        .getElementById('auto-continue-progress')
+        .getAttribute('running')
+    ).toBe('true');
+    expect(
+      timerButtons.shadowRoot.getElementById('continue-btn').style.display
+    ).toBe('none');
+  });
 
-  // test('Test countDistraction; no distractCounter localStorage', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('Test countDistraction; no distractCounter localStorage', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     timerButtons.countDistraction();
+    // Call Function
+    timerButtons.countDistraction();
 
-  //     // Expect check
-  //     expect(localStorage.getItem('distractCounter')).toBe('1');
-  //     expect(timerButtons.src).toBe('/assets/images/tomo-happy.png');
-  // });
+    // Expect check
+    expect(localStorage.getItem('distractCounter')).toBe('1');
+    expect(timerButtons.src).toBe('/assets/images/tomo-happy.png');
+  });
 
-  // test('Test countDistraction; distractCounter == 1', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('Test countDistraction; distractCounter == 1', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     localStorage.setItem('distractCounter', '1');
-  //     timerButtons.countDistraction();
+    // Call Function
+    localStorage.setItem('distractCounter', '1');
+    timerButtons.countDistraction();
 
-  //     // Expect check
-  //     expect(localStorage.getItem('distractCounter')).toBe('2');
-  //     expect(timerButtons.src).toBe('/assets/images/tomo-neutral.png');
-  // });
+    // Expect check
+    expect(localStorage.getItem('distractCounter')).toBe('2');
+    expect(timerButtons.src).toBe('/assets/images/tomo-neutral.png');
+  });
 
-  // test('Test countDistraction; distractCounter == 2', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('Test countDistraction; distractCounter == 2', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     localStorage.setItem('distractCounter', '2');
-  //     timerButtons.countDistraction();
+    // Call Function
+    localStorage.setItem('distractCounter', '2');
+    timerButtons.countDistraction();
 
-  //     // Expect check
-  //     expect(localStorage.getItem('distractCounter')).toBe('3');
-  //     expect(timerButtons.src).toBe('/assets/images/tomo-meh.png');
-  // });
+    // Expect check
+    expect(localStorage.getItem('distractCounter')).toBe('3');
+    expect(timerButtons.src).toBe('/assets/images/tomo-meh.png');
+  });
 
-  // test('Test countDistraction; distractCounter >= 3', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('Test countDistraction; distractCounter >= 3', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     localStorage.setItem('distractCounter', '4');
-  //     timerButtons.countDistraction();
+    // Call Function
+    localStorage.setItem('distractCounter', '4');
+    timerButtons.countDistraction();
 
-  //     // Expect check
-  //     expect(localStorage.getItem('distractCounter')).toBe('5');
-  //     expect(timerButtons.src).toBe('/assets/images/tomo-bleh.png');
-  // });
+    // Expect check
+    expect(localStorage.getItem('distractCounter')).toBe('5');
+    expect(timerButtons.src).toBe('/assets/images/tomo-bleh.png');
+  });
 
-  // test('setFunctions', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('setFunctions', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     function dummyChangeTask() { console.log('dummyChangeTask'); }
-  //     function dummyContinueTask() { console.log('dummyContinueTask'); }
-  //     function dummmyCreateTask() { console.log('dummmyCreateTask'); }
-  //     function dummyFailSession() { console.log('dummyFailSession'); }
-  //     function dummyGetTask() { console.log('dummyGetTask'); }
-  //     function dummyGetTasks() { console.log('dummyGetTasks'); }
-  //     function dummyStartBreak() { console.log('dummyStartBreak'); }
-  //     function dummyStartTimer() { console.log('dummyStartTimer'); }
-  //     timerButtons.setFunctions(dummyChangeTask, dummyContinueTask, dummmyCreateTask, dummyFailSession, dummyGetTask, dummyGetTasks, dummyStartBreak, dummyStartTimer);
+    // Call Function
+    function dummyChangeTask() {
+      console.log('dummyChangeTask');
+    }
+    function dummyContinueTask() {
+      console.log('dummyContinueTask');
+    }
+    function dummmyCreateTask() {
+      console.log('dummmyCreateTask');
+    }
+    function dummyFailSession() {
+      console.log('dummyFailSession');
+    }
+    function dummyGetTask() {
+      console.log('dummyGetTask');
+    }
+    function dummyGetTasks() {
+      console.log('dummyGetTasks');
+    }
+    function dummyStartBreak() {
+      console.log('dummyStartBreak');
+    }
+    function dummyStartTimer() {
+      console.log('dummyStartTimer');
+    }
+    timerButtons.setFunctions(
+      dummyChangeTask,
+      dummyContinueTask,
+      dummmyCreateTask,
+      dummyFailSession,
+      dummyGetTask,
+      dummyGetTasks,
+      dummyStartBreak,
+      dummyStartTimer
+    );
 
-  //     // Expect check
-  //     expect(timerButtons.changeTask).toBe(dummyChangeTask);
-  //     expect(timerButtons.continueTask).toBe(dummyContinueTask);
-  //     expect(timerButtons.createTask).toBe(dummmyCreateTask);
-  //     expect(timerButtons.failSession).toBe(dummyFailSession);
-  //     expect(timerButtons.getTask).toBe(dummyGetTask);
-  //     expect(timerButtons.getTasks).toBe(dummyGetTasks);
-  //     expect(timerButtons.startBreak).toBe(dummyStartBreak);
-  //     expect(timerButtons.startTimer).toBe(dummyStartTimer);
-  // })
+    // Expect check
+    expect(timerButtons.changeTask).toBe(dummyChangeTask);
+    expect(timerButtons.continueTask).toBe(dummyContinueTask);
+    expect(timerButtons.createTask).toBe(dummmyCreateTask);
+    expect(timerButtons.failSession).toBe(dummyFailSession);
+    expect(timerButtons.getTask).toBe(dummyGetTask);
+    expect(timerButtons.getTasks).toBe(dummyGetTasks);
+    expect(timerButtons.startBreak).toBe(dummyStartBreak);
+    expect(timerButtons.startTimer).toBe(dummyStartTimer);
+  });
 });
