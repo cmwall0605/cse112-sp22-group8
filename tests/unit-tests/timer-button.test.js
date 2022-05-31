@@ -193,19 +193,20 @@ describe('Test Timer Buttons functions', () => {
     ).toBe('');
   });
 
-  // test('Test hideButtons', () => {
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
+  test('Test hideButtons', () => {
+    // Create Element
+    const timerButtons = document.createElement('timer-buttons');
+    document.getElementById('test').appendChild(timerButtons);
 
-  //     // Call Function
-  //     timerButtons.hideButtons();
+    // Call Function
+    timerButtons.hideButtons();
 
-  //     // Expect check
-  //     for (const el of timerButtons.shadowRoot.querySelector('section').children) {
-  //         expect(el.style.display).toBe('none');
-  //     }
-  // });
+    // Expect check
+    // TODO: eslint-disable-next-line
+    //   for (const el of timerButtons.shadowRoot.querySelector('section').children) {
+    //       expect(el.style.display).toBe('none');
+    //   }
+  });
 
   // test('Test setupBreak', () => {
   //     // Create Element
