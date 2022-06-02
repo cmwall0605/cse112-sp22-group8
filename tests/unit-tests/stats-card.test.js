@@ -31,7 +31,7 @@ class MockLocalStorage {
 // Set up the mock local storage as the global local storage
 global.localStorage = new MockLocalStorage();
 
-describe('Timer Componenet Test function', () => {
+describe('Stats Card Test function', () => {
   beforeEach(() => {
     document.body.innerHTML =
       '<div id = "test"> ' +
