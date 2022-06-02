@@ -496,7 +496,7 @@ class TimerButtons extends HTMLElement {
    * Used to increment distraction count.
    */
   countDistraction() {
-    let distractCounter = localStorage.getItem('distractCounter');
+    let distractCounter = localStorage.getItem('currentDistractCounter');
 
     if (!distractCounter) distractCounter = 0;
 
@@ -524,7 +524,11 @@ class TimerButtons extends HTMLElement {
 
     this.src = source;
 
-    localStorage.setItem('distractCounter', distractCounter);
+    localStorage.setItem('currentDistractCounter', distractCounter);
+    localStorage.setItem(
+      'distractCounter',
+      Number(localStorage.getItem('distractCounter')) + 1
+    );
   }
 
   setFunctions(
