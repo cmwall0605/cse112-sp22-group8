@@ -1,10 +1,4 @@
-const {
-  openInfoModal,
-  closeInfoModal,
-  resetStats,
-  loadHandler,
-  unloadHandler,
-} = require('../../source/stats-page/stats');
+const { resetStats } = require('../../source/stats-page/stats');
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
 
@@ -97,23 +91,31 @@ const todayPomo = '2';
 const distractCount = '2';
 const sessionCount = '2';
 
-// Mock local storage for main.
-Storage.prototype.getItem = jest.fn((item) => {
-  switch (item) {
-    case 'statsList':
-      return statsList;
-    case 'lastVisit':
-      return lastVisit;
-    case 'todayPomo':
-      return todayPomo;
-    case 'distractCounter':
-      return distractCount;
-    case 'sessionCounter':
-      return sessionCount;
-    default:
-      return null;
+// Local storage mock.
+class MockLocalStorage {
+  cosntructor() {
+    this.store = {};
   }
-});
+
+  clear() {
+    this.store = {};
+  }
+
+  getItem(key) {
+    return this.store[key] || null;
+  }
+
+  setItem(key, value) {
+    this.store[key] = String(value);
+  }
+
+  removeItem(key) {
+    delete this.store[key];
+  }
+}
+
+// Set up the mock local storage as the global local storage
+global.localStorage = new MockLocalStorage();
 
 document.body.innerHTML =
   '<div id="info-modal" class="modal"></div>' +
@@ -128,124 +130,11 @@ document.body.innerHTML =
   '<p id="monthSuccess">0%</p>' +
   '<header-comp id="header"></header-comp>';
 
-describe('"openInfoModal" Function Test', () => {
-  test('Test to see if the modal display is set to block after function', () => {
-    const modal = document.getElementById('info-modal');
-    modal.style.display = 'none';
-    expect(modal.style.display).toBe('none');
-    openInfoModal();
-    expect(modal.style.display).toBe('block');
-  });
-});
-
-describe('"closeInfoModal" Function Test', () => {
-  test('Test to see if the modal display is set to block after function', () => {
-    const modal = document.getElementById('info-modal');
-    modal.style.display = 'block';
-    expect(modal.style.display).toBe('block');
-    closeInfoModal();
-    expect(modal.style.display).toBe('none');
-  });
-});
-
 describe('"resetStats" Function Test', () => {
   test('Test to see if the stats are reset after function', () => {
-    let newPomo = todayPomo;
-    let newDistract = distractCount;
-    let newSesion = sessionCount;
-    let newStatsList = JSON.stringify(statsListArray);
-
-    Storage.prototype.setItem = jest.fn((item, value) => {
-      switch (item) {
-        case 'todayPomo':
-          newPomo = value;
-          break;
-        case 'distractCounter':
-          newDistract = value;
-          break;
-        case 'sessionCounter':
-          newSesion = value;
-          break;
-        case 'statsList':
-          newStatsList = value;
-          break;
-        default:
-          break;
-      }
-    });
-
-    expect(newPomo).toBe(todayPomo);
-    expect(newDistract).toBe(distractCount);
-    expect(newSesion).toBe(sessionCount);
-    expect(newStatsList).toBe(JSON.stringify(statsListArray));
-
     resetStats();
-
-    expect(newPomo).toBe(0);
-    expect(newDistract).toBe(0);
-    expect(newSesion).toBe(0);
-    expect(newStatsList).toBe('[]');
-
-    expect(document.getElementById('todayAvgDistractions').innerText).toBe(0);
-    expect(document.getElementById('todaySuccess').innerText).toBe('0%');
-    expect(document.getElementById('weekPomos').innerText).toBe(0);
-    expect(document.getElementById('weekAvgDistractions').innerText).toBe(0);
-    expect(document.getElementById('weekSuccess').innerText).toBe('0%');
-    expect(document.getElementById('monthPomos').innerText).toBe(0);
-    expect(document.getElementById('monthAvgDistractions').innerText).toBe(0);
-    expect(document.getElementById('monthSuccess').innerText).toBe('0%');
-  });
-});
-
-describe('"loadHandler" Function Test', () => {
-  test('Test to see if pomo stats are set and displayed correctly', () => {
-    expect(document.getElementById('todayPomos').innerText).toBe(0);
-    expect(document.getElementById('todayAvgDistractions').innerText).toBe(0);
-    expect(document.getElementById('todaySuccess').innerText).toBe('0%');
-    expect(document.getElementById('weekPomos').innerText).toBe(0);
-    expect(document.getElementById('weekAvgDistractions').innerText).toBe(0);
-    expect(document.getElementById('weekSuccess').innerText).toBe('0%');
-    expect(document.getElementById('monthPomos').innerText).toBe(0);
-    expect(document.getElementById('monthAvgDistractions').innerText).toBe(0);
-    expect(document.getElementById('monthSuccess').innerText).toBe('0%');
-
-    loadHandler();
-
-    expect(document.getElementById('todayPomos').innerText).toBe(2);
-    expect(document.getElementById('todayAvgDistractions').innerText).toBe(
-      '1.0'
-    );
-    expect(document.getElementById('todaySuccess').innerText).toBe('100.00%');
-    expect(document.getElementById('weekPomos').innerText).toBe(8);
-    expect(document.getElementById('weekAvgDistractions').innerText).toBe(
-      '2.1'
-    );
-    expect(document.getElementById('weekSuccess').innerText).toBe('100.00%');
-    expect(document.getElementById('monthPomos').innerText).toBe(20);
-    expect(document.getElementById('monthAvgDistractions').innerText).toBe(
-      '2.6'
-    );
-    expect(document.getElementById('monthSuccess').innerText).toBe('90.91%');
-  });
-});
-
-describe('"unloadHandler" Function Test', () => {
-  test('Test to see if unloading works as intended', () => {
-    let newStatsList = '[]';
-    statsListArray.splice(10, 1); // remove item with day > 30
-
-    Storage.prototype.setItem = jest.fn((item, value) => {
-      switch (item) {
-        case 'statsList':
-          newStatsList = value;
-          break;
-        default:
-          break;
-      }
-    });
-
-    unloadHandler();
-
-    expect(newStatsList).toBe(JSON.stringify(statsListArray));
+    expect(localStorage.getItem('sessionCounter')).toBe('0');
+    expect(localStorage.getItem('todayPomo')).toBe('0');
+    expect(localStorage.getItem('distractCounter')).toBe('0');
   });
 });
