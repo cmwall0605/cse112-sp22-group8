@@ -571,7 +571,6 @@ class TimerButtons extends HTMLElement {
     distractCounter++;
 
     let source;
-
     switch (distractCounter) {
       case 0:
         source = '/assets/images/tomo-excited.webp';
