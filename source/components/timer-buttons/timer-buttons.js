@@ -506,6 +506,7 @@ class TimerButtons extends HTMLElement {
    * Used to initialize the task selection dropdown in the create-task form.
    * Fills the dropdown with the different tasks from the tasks page.
    */
+  // Create TaskSelect not used
   createTaskSelect() {
     const dropdown = this.shadowRoot.getElementById('choose-task');
     if (this.allTasks)
