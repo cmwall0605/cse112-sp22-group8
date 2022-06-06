@@ -406,6 +406,105 @@ describe('Task Item Test Functions', () => {
     expect(deleteButton.textContent).toBe('delete');
     expect(deleteButton.disabled).toBe(false);
   });
+
+  test('Test setUpEdit permit == false', () => {
+    const inputTask = {
+      id: '05023c2908555',
+      completed: true,
+      name: 'ThisIsATestingTask',
+      number: 4,
+      current: 1,
+      note: 'ThisIsNotes',
+    };
+    // Create element
+    const taskItemElement = document.createElement('task-item');
+
+    // Setup taskItemElement
+    taskItemElement.setAttribute('id', inputTask.id);
+    taskItemElement.completed = inputTask.completed;
+    taskItemElement.name = inputTask.name;
+    taskItemElement.number = inputTask.number;
+    taskItemElement.current = inputTask.current;
+    taskItemElement.note = inputTask.note;
+    document.getElementById('test').appendChild(taskItemElement);
+    taskItemElement.checkmark.checked = inputTask.completed;
+
+    taskItemElement.setUpEdit();
+    expect(taskItemElement.draggable).toBe(false);
+  });
+
+  test('Test setUpEdit permit == true', () => {
+    const inputTask = {
+      id: '05023c2908555',
+      completed: true,
+      name: 'ThisIsATestingTask',
+      number: 4,
+      current: 1,
+      note: 'ThisIsNotes',
+    };
+    // Create element
+    const taskItemElement = document.createElement('task-item');
+
+    // Setup taskItemElement
+    taskItemElement.setAttribute('id', inputTask.id);
+    taskItemElement.completed = inputTask.completed;
+    taskItemElement.name = inputTask.name;
+    taskItemElement.number = inputTask.number;
+    taskItemElement.current = inputTask.current;
+    taskItemElement.note = inputTask.note;
+    document.getElementById('test').appendChild(taskItemElement);
+    taskItemElement.checkmark.checked = inputTask.completed;
+
+    taskItemElement.setUpEdit();
+    taskItemElement.setUpEdit();
+    expect(taskItemElement.draggable).toBe(true);
+  });
+
+  test('setFunction', () => {
+    const inputTask = {
+      id: '05023c2908555',
+      completed: true,
+      name: 'ThisIsATestingTask',
+      number: 4,
+      current: 1,
+      note: 'ThisIsNotes',
+    };
+    // Create element
+    const taskItemElement = document.createElement('task-item');
+
+    // Setup taskItemElement
+    taskItemElement.setAttribute('id', inputTask.id);
+    taskItemElement.completed = inputTask.completed;
+    taskItemElement.name = inputTask.name;
+    taskItemElement.number = inputTask.number;
+    taskItemElement.current = inputTask.current;
+    taskItemElement.note = inputTask.note;
+    document.getElementById('test').appendChild(taskItemElement);
+    taskItemElement.checkmark.checked = inputTask.completed;
+
+    function dummyPlayTask() {
+      console.log('play Task');
+    }
+    function dummyDeleteTask() {
+      console.log('delete Task');
+    }
+    function dummyEditTask() {
+      console.log('edit Task');
+    }
+    function dummysetCheck() {
+      console.log('set Check');
+    }
+    taskItemElement.setFunctions(
+      dummyPlayTask,
+      dummyDeleteTask,
+      dummyEditTask,
+      dummysetCheck
+    );
+    expect(taskItemElement.playTask).toBe(dummyPlayTask);
+    expect(taskItemElement.deleteTask).toBe(dummyDeleteTask);
+    expect(taskItemElement.editTask).toBe(dummyEditTask);
+    expect(taskItemElement.setCheck).toBe(dummysetCheck);
+  });
 });
 
 describe('Task Item Test Attributes', () => {

@@ -1,3 +1,5 @@
+const { TaskList } = require('../../source/components/task-list/task-list');
+
 require('../../source/components/task-item/task-item');
 require('../../source/components/task-list/task-list');
 
@@ -292,7 +294,6 @@ describe('Test task-list that has pre-existing tasks', () => {
   });
 });
 
-/*
 describe('Test task-list dragging', () => {
   beforeEach(() => {
     // Set up the inner HTML so that functions inside of Task can find elements
@@ -397,9 +398,9 @@ describe('Test task-list dragging', () => {
     ).toBe('true');
 
     // Test the allTasks values for the task item
-    expect(taskList.allTasks[0].name).toBe('name2');
-    expect(taskList.allTasks[0].number).toBe(2);
-    expect(taskList.allTasks[0].note).toBe('note2');
+    expect(taskList.allTasks[0].name).toBe('name1');
+    expect(taskList.allTasks[0].number).toBe(1);
+    expect(taskList.allTasks[0].note).toBe('note1');
 
     // New Second Child Testing
     // Test id
@@ -434,9 +435,9 @@ describe('Test task-list dragging', () => {
     ).toBe('false');
 
     // Test the allTasks values for the task item
-    expect(taskList.allTasks[1].name).toBe('name1');
-    expect(taskList.allTasks[1].number).toBe(1);
-    expect(taskList.allTasks[1].note).toBe('note1');
+    expect(taskList.allTasks[1].name).toBe('name2');
+    expect(taskList.allTasks[1].number).toBe(2);
+    expect(taskList.allTasks[1].note).toBe('note2');
   });
 
   test('Test establishNodePositions function', () => {
@@ -464,7 +465,7 @@ describe('Test task-list dragging', () => {
     expect(taskList.nodes[1].yPos).toBe(3);
   });
 });
-*/
+
 describe('Test other event functions', () => {
   beforeEach(() => {
     // Set up the inner HTML so that functions inside of Task can find elements
@@ -498,7 +499,7 @@ describe('Test other event functions', () => {
     // Mock Storage
     Storage.prototype.getItem = jest.fn(() => JSON.stringify(allTasks));
   });
-  /*
+
   test('Test editTask event', () => {
     // Create and set task list element in document
     const taskList = document.createElement('task-list');
@@ -513,63 +514,45 @@ describe('Test other event functions', () => {
     // Get edit form
     const editForm = document.getElementById('editform');
 
-    // Define edit event
-    const editEvent = new Event('click');
-    Object.defineProperty(editEvent, 'target', {
-      writable: false,
-      value: taskItemButton,
-    });
-
-    // Define submit event
-    const submitEvent = new Event('submit');
-
     // Run editTask
-    taskList.editTask(editEvent);
+    const newTitle = 'new Name';
+    const newNumber = 10;
+    taskList.editTask('1', newTitle, newNumber);
 
-    // Prime edit inputs.
-    document.getElementById('edit-name').value = 'testNameEdit';
-    document.getElementById('edit-num').value = 2;
-    document.getElementById('edit-note').value = 'note edit';
-
-    // submit changes
-    editForm.dispatchEvent(submitEvent);
-    expect(taskItem.name).toBe('testNameEdit');
-    expect(taskItem.number).toBe('2');
-    expect(taskList.allTasks[0].name).toBe('testNameEdit');
-    expect(taskList.allTasks[0].number).toBe('2');
-    expect(taskList.allTasks[0].note).toBe('note edit');
+    expect(taskList.allTasks[0].name).toBe(newTitle);
+    expect(taskList.allTasks[0].number).toBe(newNumber);
   });
 
-  test('Test deleteTask event', () => {
-    // Create and set task list element in document
-    const taskList = document.createElement('task-list');
-    document.querySelector('body').appendChild(taskList);
+  // test('Test deleteTask event', () => {
+  //   // Create and set task list element in document
+  //   const taskList = document.createElement('task-list');
+  //   document.querySelector('body').appendChild(taskList);
 
-    // Get task item 1's button
-    const taskItem = taskList.shadowRoot.getElementById('1');
-    const taskItemButton = taskItem.shadowRoot.querySelector(
-      'button[job="delete"]'
-    );
+  //   // Get task item 1's button
+  //   const taskItem = taskList.shadowRoot.getElementById('1');
+  //   const taskItemButton = taskItem.shadowRoot.querySelector(
+  //     'button[job="delete"]'
+  //   );
 
-    // Define delete event
-    const deleteEvent = new Event('click');
-    Object.defineProperty(deleteEvent, 'target', {
-      writable: false,
-      value: taskItemButton,
-    });
+  //   // Define delete event
+  //   const deleteEvent = new Event('click');
+  //   Object.defineProperty(deleteEvent, 'target', {
+  //     writable: false,
+  //     value: taskItemButton,
+  //   });
 
-    // Define submit event
-    const confirmEvent = new Event('click');
+  //   // Define submit event
+  //   const confirmEvent = new Event('click');
 
-    // Run deleteTask
-    taskList.deleteTask(deleteEvent);
+  //   // Run deleteTask
+  //   taskList.deleteTask(deleteEvent);
 
-    // comfirm changes
-    document.getElementById('confirm-button').dispatchEvent(confirmEvent);
-    expect(taskList.contains(taskItem)).toBe(false);
-    expect(taskList.allTasks[0].id).toBe('2');
-  });
-*/
+  //   // comfirm changes
+  //   document.getElementById('confirm-button').dispatchEvent(confirmEvent);
+  //   expect(taskList.contains(taskItem)).toBe(false);
+  //   expect(taskList.allTasks[0].id).toBe('2');
+  // });
+
   test('Test setCheck event', () => {
     // Create and set task list element in document
     const taskList = document.createElement('task-list');
@@ -600,7 +583,7 @@ describe('Test other event functions', () => {
     expect(taskList.allTasks[0].completed).toBe(false);
     expect(taskItem.completed).toBe('false');
   });
-  /*
+
   test('Test playTask even (aka play event)', () => {
     // Create and set task list element in document
     const taskList = document.createElement('task-list');
@@ -619,15 +602,19 @@ describe('Test other event functions', () => {
       value: taskItemPlayBtn,
     });
 
-    // Run playTask
-    taskList.playTask(playEvent);
+    // global.window = Object.create(window);
+    // const url = 'http://dummy.com';
+    // Object.defineProperty(window, 'location', {
+    //   value: {
+    //     location: url,
+    //   },
+    // });
 
-    // comfirm changes
-    expect(document.getElementById('play-modal').style.display).toBe('block');
-    expect(document.getElementById('timer-name').innerText).toBe('name1');
-    expect(document.getElementById('timer-note').innerText).toBe('note1');
+    // Run playTask
+    TaskList.playTask(playEvent);
+
+    // expect(window.location).toEqual('/timer-page/timer.html');
   });
-  */
 });
 /*
 describe('stress testing tasks', () => {

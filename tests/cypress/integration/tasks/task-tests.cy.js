@@ -1,257 +1,243 @@
 // This test should go through the following general features:
 // Add task -> edit task -> move task -> complete task -> delete task
+
+/**
+ * Check assert `num` tasks are in the task list
+ * @param {number} num How many tasks should be in the task list
+ */
+function numTasks(num) {
+  if (num === 0) {
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .should('not.exist');
+  } else {
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > h1')
+      .should('have.length', num);
+  }
+}
+
+/**
+ * Assert a task with the name `task` and count `count` exist in the task list
+ * @param {String} task name of the task
+ * @param {String} count pomo count of the task
+ */
+function taskExists(task, count) {
+  cy.get('task-list')
+    .shadow()
+    .find('section > task-item')
+    .shadow()
+    .find('section > h1')
+    .contains(`${task}`);
+  cy.get('task-list')
+    .shadow()
+    .find('section > task-item')
+    .shadow()
+    .find('section > progress-container > progress-bar')
+    .contains(`${count}`);
+}
+
+/**
+ * Add a task with the name `task` and count `count` exist to the task list
+ * @param {String} task name of the task
+ * @param {String} count pomo count of the task
+ */
+function addTask(task, count) {
+  // type task1 title
+  cy.get('task-list')
+    .shadow()
+    .find('input[content="title"]')
+    .type(`${task}`, { force: true });
+  // type task1 count
+  cy.get('task-list')
+    .shadow()
+    .find('input[content="count"]')
+    .click()
+    .type(`${count}`, { force: true });
+  cy.get('task-list').shadow().find('form > button').click();
+}
 describe('Tasks tests', () => {
-  const firstName = 'testname1';
-  const firstNum = 1;
-  const firstNotes = 'Notes for testname1';
-  const secondName = 'testname2';
-  const secondNum = 2;
-  const secondNotes = 'Notes for testname2';
-  const firstNameEdited = 'testname1edit';
-  const firstNumEdited = 3;
-
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5501/source/index.html');
+    cy.visit('http://127.0.0.1:5501/tasks-page/tasks.html');
   });
 
-  it('Add task modal appears when add task-btn is clicked', () => {
-    cy.get('#add-task-modal').should('have.css', 'display', 'none');
-    cy.get('#add-task-btn').click();
-    cy.get('#add-task-modal').should('have.css', 'display', 'block');
+  it('Add a single task and check it was added', () => {
+    addTask('task1', '4');
+    taskExists('task1', '4');
   });
 
-  it('Add task modal appears when add-task-btn-bot is clicked', () => {
-    cy.get('#add-task-modal').should('have.css', 'display', 'none');
-    cy.get('#add-task-btn-bottom').click();
-    cy.get('#add-task-modal').should('have.css', 'display', 'block');
+  it('Add multiple tasks, edit, then remove', () => {
+    addTask('task1', '4');
+    addTask('task2', '5');
+    taskExists('task1', '4');
+    taskExists('task2', '5');
+    numTasks(2);
+    // edit top task (task 2)
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > button[title="Edit Task"]')
+      .first()
+      .click({ position: 'top' });
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > form > input[content="title"]')
+      .first()
+      .type('edited', { force: true });
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > form > input[content="count"]')
+      .first()
+      .clear()
+      .type('6', { force: true });
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .first()
+      .find('section > form > button[type="submit"]')
+      .click();
+    // assert task was edited
+    taskExists('task2edited', '6');
+    // now delete the edited task
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > button[title="Delete Task"]')
+      .first()
+      .click({ position: 'top' })
+      .click({ position: 'top' });
+    // check task deleted
+    numTasks(1);
+    // check other task still there
+    taskExists('task1', 4);
   });
-
-  it('Add two tasks', () => {
-    cy.get('#add-task-btn').click();
-    cy.get('#task-name').clear();
-    cy.get('#task-name').type(firstName);
-    cy.get('#task-num').clear();
-    cy.get('#task-num').type(firstNum);
-    cy.get('#task-note').clear();
-    cy.get('#task-note').type(firstNotes);
-    cy.get('#save-btn').click();
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .should('exist');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .then(($el) => {
-        expect($el).to.have.attr('number', firstNum);
-        expect($el).to.have.attr('current', 0);
-      });
-    cy.get('#add-task-btn').click();
-    cy.get('#task-name').clear();
-    cy.get('#task-name').type(secondName);
-    cy.get('#task-num').clear();
-    cy.get('#task-num').type(secondNum);
-    cy.get('#task-note').clear();
-    cy.get('#task-note').type(secondNotes);
-    cy.get('#save-btn').click();
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${secondName}"]`)
-      .should('exist');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${secondName}"]`)
-      .then(($el) => {
-        expect($el).to.have.attr('number', secondNum);
-        expect($el).to.have.attr('current', 0);
-      });
-  });
-
-  it('Play modal displays correct info', () => {
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#play-btn')
-      .click({ force: true });
-    cy.get('#timer-name').contains(firstName);
-    cy.get('#timer-note').contains(firstName);
-  });
-
-  it('Delete modal displays correct info', () => {
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#delete-btn')
-      .click({ force: true });
-    cy.get('#task-delete').contains(firstName);
-  });
-
-  it('Edit modal displays correct info', () => {
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#edit-btn')
-      .click({ force: true });
-    cy.get('#edit-name').should('have.value', firstName);
-    cy.get('#edit-num').should('have.value', firstNum);
-    cy.get('#edit-note').should('have.value', firstNotes);
-  });
-
   it('Checkmark disables play/edit button and fully completes task', () => {
-    cy.get('#main-container')
+    addTask('task1', '4');
+
+    // check task as done
+    cy.get('task-list')
       .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
+      .find('section > task-item')
       .shadow()
-      .find('#edit-btn')
-      .should('not.be.disabled');
-    cy.get('#main-container')
+      .find('section > input[type="checkbox"]')
+      .first()
+      .click({ position: 'top' });
+    // assert edit button is disabled
+    cy.get('task-list')
       .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
+      .find('section > task-item')
       .shadow()
-      .find('#play-btn')
-      .should('not.be.disabled');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#delete-btn')
-      .should('not.be.disabled');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#progress-bar')
-      .should('have.attr', 'style', 'width: 0.00%;');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#checkmark')
-      .find('#checkmark-input')
-      .check();
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#edit-btn')
+      .find('section > button[title="Edit Task"]')
+      .first()
       .should('be.disabled');
-    cy.get('#main-container')
+    // assert play button is disabled
+    cy.get('task-list')
       .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
+      .find('section > task-item')
       .shadow()
-      .find('#play-btn')
+      .find('section > button[title="Start task"]')
+      .first()
       .should('be.disabled');
-    cy.get('#main-container')
+
+    // assert delete button is NOT disabled
+    cy.get('task-list')
       .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
+      .find('section > task-item')
       .shadow()
-      .find('#delete-btn')
+      .find('section > button[title="Delete Task"]')
+      .first()
       .should('not.be.disabled');
-    cy.get('#main-container')
+
+    // assert progress bar is full
+    cy.get('task-list')
       .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
+      .find('section > task-item')
       .shadow()
-      .find('#progress-bar')
+      .find('section > progress-container > progress-bar')
       .should('have.attr', 'style', 'width: 100%;');
+    // uncheck task
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > input[type="checkbox"]')
+      .first()
+      .click({ position: 'top' });
+    // assert edit button is not disabled
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > button[title="Edit Task"]')
+      .first()
+      .should('not.be.disabled');
+    // assert play button is not disabled
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > button[title="Delete Task"]')
+      .first()
+      .should('not.be.disabled');
+
+    // assert delete button is NOT disabled
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > button[title="Start task"]')
+      .first()
+      .should('not.be.disabled');
+
+    // assert progress bar is empty
+    cy.get('task-list')
+      .shadow()
+      .find('section > task-item')
+      .shadow()
+      .find('section > progress-container > progress-bar')
+      .should('have.attr', 'style', 'width: 0%;');
   });
 
   it('Should have tasks still on page after reload', () => {
+    addTask('task', 3);
     cy.reload();
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .should('exist');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .then(($el) => {
-        expect($el).to.have.attr('number', firstNum);
-        expect($el).to.have.attr('current', 0);
-      });
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${secondName}"]`)
-      .should('exist');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${secondName}"]`)
-      .then(($el) => {
-        expect($el).to.have.attr('number', secondNum);
-        expect($el).to.have.attr('current', 0);
-      });
+    taskExists('task', 3);
   });
 
-  it('Edit first task, and then delete it', () => {
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#checkmark')
-      .find('#checkmark-input')
-      .click();
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstName}"]`)
-      .shadow()
-      .find('#edit-btn')
-      .click({ force: true });
-    cy.get('#edit-name').clear();
-    cy.get('#edit-name').type(firstNameEdited);
-    cy.get('#edit-num').clear();
-    cy.get('#edit-num').type(firstNumEdited);
-    cy.get('#edit-note').clear();
-    cy.get('#edit-note').type('Notes for testname1 edited');
-    cy.get('#edit-save-btn').click();
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstNameEdited}"]`)
-      .should('exist');
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstNameEdited}"]`)
-      .then(($el) => {
-        expect($el).to.have.attr('number', firstNumEdited);
-        expect($el).to.have.attr('current', 0);
-      });
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstNameEdited}"]`)
-      .shadow()
-      .find('#delete-btn')
-      .click({ force: true });
-    cy.get('#confirm-button').click();
-    cy.get('#main-container')
-      .shadow()
-      .find('#main-list')
-      .find(`[name="${firstNameEdited}"]`)
-      .should('not.exist');
+  it('Attempt to add a task that should not be allowed', () => {
+    addTask(
+      'a very long task name that should be past the character limit',
+      '100'
+    );
+    numTasks(0);
+  });
+
+  it('Attempt to add a task with a name that is too long', () => {
+    addTask(
+      'a very long task name that should be past the character limit',
+      '10'
+    );
+    numTasks(1);
+    taskExists('a very long task name that', '10');
+  });
+
+  it('Create 50 tasks and verify they exist', () => {
+    for (let i = 0; i < 50; i++) {
+      addTask(`task ${i}`, (i % 9) + 1);
+    }
+    for (let i = 0; i < 50; i++) {
+      taskExists(`task ${i}`, (i % 9) + 1);
+    }
   });
 });
