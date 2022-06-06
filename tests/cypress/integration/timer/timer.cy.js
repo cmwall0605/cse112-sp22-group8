@@ -1,6 +1,8 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /* eslint-disable no-undef */
 describe('Test timer.js and functions)', () => {
   beforeEach(() => {
+    cy.clock();
     cy.visit('http://127.0.0.1:5501/timer-page/timer.html');
   });
 
@@ -26,7 +28,7 @@ describe('Test timer.js and functions)', () => {
       .shadow()
       .find('#distraction-btn')
       .then(($el) => {
-        expect($el).to.have.attr('src', '/assets/images/tomo-neutral.png');
+        expect($el).to.have.attr('src', '/assets/images/tomo-neutral.webp');
       });
   });
 
@@ -38,7 +40,7 @@ describe('Test timer.js and functions)', () => {
       .shadow()
       .find('#failDialog')
       .should('have.css', 'display', 'block');
-    cy.get('timer-buttons').shadow().find('.Cancel-buttons').click();
+    cy.get('timer-buttons').shadow().find('#cancel-button').click();
     cy.get('timer-buttons')
       .shadow()
       .find('#failDialog')
@@ -57,36 +59,38 @@ describe('Test timer.js and functions)', () => {
   });
 
   it('long break shows up after a multiple of 4 pomos', () => {
-    cy.clock();
     localStorage.setItem('sessionCounter', '11');
     cy.get('timer-buttons').shadow().find('.start-button').click();
     cy.get('timer-buttons').shadow().find('#create-skip').click();
     cy.tick(1500000);
     cy.tick(2000);
-    cy.get('#currTask').then(($el) => {
-      expect($el).to.have.text('Long Break');
-    });
+    cy.clock().invoke('restore');
+    cy.wait(2000);
+    cy.clock(new Date());
+    cy.get('#currTask').should('have.text', 'Long Break');
   });
 
   it('short break shows up after a non-multiple of 4 pomos', () => {
-    cy.clock();
     localStorage.setItem('sessionCounter', '10');
     cy.get('timer-buttons').shadow().find('.start-button').click();
     cy.get('timer-buttons').shadow().find('#create-skip').click();
     cy.tick(1500000);
     cy.tick(2000);
-    cy.get('#currTask').then(($el) => {
-      expect($el).to.have.text('Short Break');
-    });
+    cy.clock().invoke('restore');
+    cy.wait(2000);
+    cy.clock(new Date());
+    cy.get('#currTask').should('have.text', 'Short Break');
   });
 
   it('starting the short break works properly', () => {
-    cy.clock();
     localStorage.setItem('sessionCounter', '10');
     cy.get('timer-buttons').shadow().find('.start-button').click();
     cy.get('timer-buttons').shadow().find('#create-skip').click();
     cy.tick(1500000);
     cy.tick(2000);
+    cy.clock().invoke('restore');
+    cy.wait(2000);
+    cy.clock(new Date());
     cy.get('timer-buttons').shadow().find('#break-button').click();
     cy.get('timer-buttons')
       .shadow()
@@ -95,12 +99,14 @@ describe('Test timer.js and functions)', () => {
   });
 
   it('starting the long break works properly', () => {
-    cy.clock();
     localStorage.setItem('sessionCounter', '11');
     cy.get('timer-buttons').shadow().find('.start-button').click();
     cy.get('timer-buttons').shadow().find('#create-skip').click();
     cy.tick(1500000);
     cy.tick(2000);
+    cy.clock().invoke('restore');
+    cy.wait(2000);
+    cy.clock(new Date());
     cy.get('timer-buttons').shadow().find('#break-button').click();
     cy.get('timer-buttons')
       .shadow()

@@ -412,7 +412,7 @@ class TimerButtons extends HTMLElement {
     const cancelButton = TimerButtons.createElementWithAttributes(
       'button',
       ['id', 'class'],
-      ['fail-button', 'Cancel-buttons'],
+      ['cancel-button', 'cancel-buttons'],
       'Cancel'
     );
 
@@ -571,7 +571,6 @@ class TimerButtons extends HTMLElement {
     distractCounter++;
 
     let source;
-
     switch (distractCounter) {
       case 0:
         source = '/assets/images/tomo-excited.webp';

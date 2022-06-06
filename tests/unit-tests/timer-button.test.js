@@ -158,7 +158,7 @@ describe('Test Timer Buttons functions', () => {
   //     expect(timerButtons.shadowRoot.getElementById('start-btn').style.display).toBe('none');
   //     expect(timerButtons.shadowRoot.getElementById('distraction-btn').style.display).toBe('');
   //     expect(timerButtons.shadowRoot.getElementById('fail-btn').style.display).toBe('');
-  //     expect(timerButtons.distractCounter).toBe(0);
+  //     expect(timerButtons.currentDistractCounter).toBe(0);
   // });
 
   test('Test setDisableTaskForm', () => {
@@ -183,7 +183,7 @@ describe('Test Timer Buttons functions', () => {
 
     // Expect check
     expect(timerButtons.shadowRoot.querySelector('#distraction-btn').src).toBe(
-      'http://localhost/assets/images/tomo-excited.png'
+      'http://localhost/assets/images/tomo-excited.webp'
     );
     expect(
       timerButtons.shadowRoot.querySelector('#distraction-btn').style.display
@@ -244,7 +244,7 @@ describe('Test Timer Buttons functions', () => {
     ).toBe('none');
   });
 
-  test('Test countDistraction; no distractCounter localStorage', () => {
+  test('Test countDistraction; no currentDistractCounter localStorage', () => {
     // Create Element
     const timerButtons = document.createElement('timer-buttons');
     document.getElementById('test').appendChild(timerButtons);
@@ -253,50 +253,50 @@ describe('Test Timer Buttons functions', () => {
     timerButtons.countDistraction();
 
     // Expect check
-    expect(localStorage.getItem('distractCounter')).toBe('1');
-    expect(timerButtons.src).toBe('/assets/images/tomo-happy.png');
+    expect(localStorage.getItem('currentDistractCounter')).toBe('1');
+    expect(timerButtons.src).toBe('/assets/images/tomo-happy.webp');
   });
 
-  test('Test countDistraction; distractCounter == 1', () => {
+  test('Test countDistraction; currentDistractCounter == 1', () => {
     // Create Element
     const timerButtons = document.createElement('timer-buttons');
     document.getElementById('test').appendChild(timerButtons);
 
     // Call Function
-    localStorage.setItem('distractCounter', '1');
+    localStorage.setItem('currentDistractCounter', '1');
     timerButtons.countDistraction();
 
     // Expect check
-    expect(localStorage.getItem('distractCounter')).toBe('2');
-    expect(timerButtons.src).toBe('/assets/images/tomo-neutral.png');
+    expect(localStorage.getItem('currentDistractCounter')).toBe('2');
+    expect(timerButtons.src).toBe('/assets/images/tomo-neutral.webp');
   });
 
-  test('Test countDistraction; distractCounter == 2', () => {
+  test('Test countDistraction; currentDistractCounter == 2', () => {
     // Create Element
     const timerButtons = document.createElement('timer-buttons');
     document.getElementById('test').appendChild(timerButtons);
 
     // Call Function
-    localStorage.setItem('distractCounter', '2');
+    localStorage.setItem('currentDistractCounter', '2');
     timerButtons.countDistraction();
 
     // Expect check
-    expect(localStorage.getItem('distractCounter')).toBe('3');
-    expect(timerButtons.src).toBe('/assets/images/tomo-meh.png');
+    expect(localStorage.getItem('currentDistractCounter')).toBe('3');
+    expect(timerButtons.src).toBe('/assets/images/tomo-meh.webp');
   });
 
-  test('Test countDistraction; distractCounter >= 3', () => {
+  test('Test countDistraction; currentDistractCounter >= 3', () => {
     // Create Element
     const timerButtons = document.createElement('timer-buttons');
     document.getElementById('test').appendChild(timerButtons);
 
     // Call Function
-    localStorage.setItem('distractCounter', '4');
+    localStorage.setItem('currentDistractCounter', '4');
     timerButtons.countDistraction();
 
     // Expect check
-    expect(localStorage.getItem('distractCounter')).toBe('5');
-    expect(timerButtons.src).toBe('/assets/images/tomo-bleh.png');
+    expect(localStorage.getItem('currentDistractCounter')).toBe('5');
+    expect(timerButtons.src).toBe('/assets/images/tomo-bleh.webp');
   });
 
   test('setFunctions', () => {
