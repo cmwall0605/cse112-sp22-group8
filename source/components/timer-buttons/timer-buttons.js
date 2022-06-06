@@ -355,7 +355,7 @@ class TimerButtons extends HTMLElement {
     const cancelButton = TimerButtons.createElementWithAttributes(
       'button',
       ['id', 'class'],
-      ['fail-button', 'Cancel-buttons'],
+      ['cancel-button', 'cancel-buttons'],
       'Cancel'
     );
 
