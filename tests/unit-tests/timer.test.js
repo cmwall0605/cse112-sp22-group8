@@ -1,16 +1,9 @@
 const {
-  timerOnLoad,
-  getTask,
-  getTasks,
-  autoContinue,
   continueTask,
   changeTask,
   startBreak,
   deselectTask,
   startTimer,
-  setTimer,
-  timerCompCallback,
-  finishedTask,
   createTask,
   failSession,
 } = require('../../source/timer-page/timer');
