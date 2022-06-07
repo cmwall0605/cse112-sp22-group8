@@ -93,7 +93,7 @@ async function dispatchActivity() {
     document.dispatchEvent(activityEvent);
   });
 
-  activity.pageName = window.location.pathName;
+  activity.pageName = window.location.pathname;
   activity.window = [window.screen.width, window.screen.height];
 
   document.addEventListener(
@@ -134,7 +134,7 @@ function sendDataInterval() {
           sessionStorage.setItem('id', docRef.id);
         }
       } catch (e) {
-        // console.error('Error adding document: ', e);
+        console.error('Error adding document: ', e);
       }
     }
   }, 5000);
