@@ -183,7 +183,7 @@ describe('Test Timer Buttons functions', () => {
 
     // Expect check
     expect(timerButtons.shadowRoot.querySelector('#distraction-btn').src).toBe(
-      'http://localhost/assets/images/tomo-excited.png'
+      'http://localhost/assets/images/tomo-excited.webp'
     );
     expect(
       timerButtons.shadowRoot.querySelector('#distraction-btn').style.display
@@ -254,7 +254,7 @@ describe('Test Timer Buttons functions', () => {
 
     // Expect check
     expect(localStorage.getItem('distractCounter')).toBe('1');
-    expect(timerButtons.src).toBe('/assets/images/tomo-happy.png');
+    expect(timerButtons.src).toBe('/assets/images/tomo-happy.webp');
   });
 
   test('Test countDistraction; distractCounter == 1', () => {
@@ -268,7 +268,7 @@ describe('Test Timer Buttons functions', () => {
 
     // Expect check
     expect(localStorage.getItem('distractCounter')).toBe('2');
-    expect(timerButtons.src).toBe('/assets/images/tomo-neutral.png');
+    expect(timerButtons.src).toBe('/assets/images/tomo-happy.webp');
   });
 
   test('Test countDistraction; distractCounter == 2', () => {
@@ -282,7 +282,7 @@ describe('Test Timer Buttons functions', () => {
 
     // Expect check
     expect(localStorage.getItem('distractCounter')).toBe('3');
-    expect(timerButtons.src).toBe('/assets/images/tomo-meh.png');
+    expect(timerButtons.src).toBe('/assets/images/tomo-happy.webp');
   });
 
   test('Test countDistraction; distractCounter >= 3', () => {
@@ -296,7 +296,7 @@ describe('Test Timer Buttons functions', () => {
 
     // Expect check
     expect(localStorage.getItem('distractCounter')).toBe('5');
-    expect(timerButtons.src).toBe('/assets/images/tomo-bleh.png');
+    expect(timerButtons.src).toBe('/assets/images/tomo-happy.webp');
   });
 
   test('setFunctions', () => {
