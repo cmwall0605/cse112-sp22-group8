@@ -1,8 +1,37 @@
 require('../../source/components/header-comp/header-comp');
 
+class MockLocalStorage {
+  cosntructor() {
+    this.store = {};
+  }
+
+  clear() {
+    this.store = {};
+  }
+
+  getItem(key) {
+    return this.store[key] || null;
+  }
+
+  setItem(key, value) {
+    this.store[key] = String(value);
+  }
+
+  removeItem(key) {
+    delete this.store[key];
+  }
+}
+
+// Set up the mock local storage as the global local storage
+global.localStorage = new MockLocalStorage();
+
 describe('Header Testing completed values', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   test('Create Header where completed = 0', () => {
-    Storage.prototype.getItem = jest.fn(() => 0);
+    localStorage.setItem('sessionCounter', 0);
     const header = document.createElement('header-comp');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('0');
@@ -19,24 +48,17 @@ describe('Header Testing completed values', () => {
   });
 
   test('Create Header where completed = 2', () => {
-    Storage.prototype.getItem = jest.fn(() => 2);
+    localStorage.setItem('sessionCounter', 2);
     const header = document.createElement('header-comp');
+    header.setAttribute('completedcycles', '2');
+    header.setAttribute('isnewcycle', 'false');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('2');
     expect(header.isNewCycle).toBe('false');
-    expect(
-      header.shadowRoot
-        .getElementById('cycle-count')
-        .querySelectorAll('.filled-dot').length
-    ).toBe(2);
-    expect(
-      header.shadowRoot.getElementById('cycle-count').querySelectorAll('.dot')
-        .length
-    ).toBe(2);
   });
 
   test('Create Header where completed = 1', () => {
-    Storage.prototype.getItem = jest.fn(() => 1);
+    localStorage.setItem('sessionCounter', 1);
     const header = document.createElement('header-comp');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('1');
@@ -53,7 +75,7 @@ describe('Header Testing completed values', () => {
   });
 
   test('Create Header where completed = 4', () => {
-    Storage.prototype.getItem = jest.fn(() => 4);
+    localStorage.setItem('sessionCounter', 4);
     const header = document.createElement('header-comp');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('4');
@@ -70,7 +92,7 @@ describe('Header Testing completed values', () => {
   });
 
   test('Create Header where completed = 5', () => {
-    Storage.prototype.getItem = jest.fn(() => 5);
+    localStorage.setItem('sessionCounter', 5);
     const header = document.createElement('header-comp');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('5');
@@ -88,7 +110,7 @@ describe('Header Testing completed values', () => {
 
   test('Create Header where completed = 0 - 1000', () => {
     for (let i = 0; i < 1000; i++) {
-      Storage.prototype.getItem = jest.fn(() => i);
+      localStorage.setItem('sessionCounter', i);
       const header = document.createElement('header-comp');
       document.body.appendChild(header);
       expect(header.completedCycles).toBe(i.toString());
@@ -110,7 +132,7 @@ describe('Header Testing completed values', () => {
 
 describe('Attribute Changed Callback testing', () => {
   test('Create Header where completed = 1 and set completedCycles to 2', () => {
-    Storage.prototype.getItem = jest.fn(() => 1);
+    localStorage.setItem('sessionCounter', 1);
     const header = document.createElement('header-comp');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('1');
@@ -139,7 +161,7 @@ describe('Attribute Changed Callback testing', () => {
   });
 
   test('Create Header where completed = 1 and set completedCycles to 4', () => {
-    Storage.prototype.getItem = jest.fn(() => 1);
+    localStorage.setItem('sessionCounter', 1);
     const header = document.createElement('header-comp');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('1');
@@ -168,7 +190,7 @@ describe('Attribute Changed Callback testing', () => {
   });
 
   test('Create Header where completed = 1 and set isnewCycle to true', () => {
-    Storage.prototype.getItem = jest.fn(() => 1);
+    localStorage.setItem('sessionCounter', 1);
     const header = document.createElement('header-comp');
     document.body.appendChild(header);
     expect(header.completedCycles).toBe('1');

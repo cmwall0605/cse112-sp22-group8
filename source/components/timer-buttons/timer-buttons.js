@@ -412,7 +412,7 @@ class TimerButtons extends HTMLElement {
     const cancelButton = TimerButtons.createElementWithAttributes(
       'button',
       ['id', 'class'],
-      ['fail-button', 'Cancel-buttons'],
+      ['cancel-button', 'cancel-buttons'],
       'Cancel'
     );
 
@@ -506,6 +506,7 @@ class TimerButtons extends HTMLElement {
    * Used to initialize the task selection dropdown in the create-task form.
    * Fills the dropdown with the different tasks from the tasks page.
    */
+  // Create TaskSelect not used
   createTaskSelect() {
     const dropdown = this.shadowRoot.getElementById('choose-task');
     if (this.allTasks)
@@ -570,7 +571,6 @@ class TimerButtons extends HTMLElement {
     distractCounter++;
 
     let source;
-
     switch (distractCounter) {
       case 0:
         source = '/assets/images/tomo-excited.webp';
