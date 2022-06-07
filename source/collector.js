@@ -28,11 +28,10 @@ const db = getFirestore(app);
 
 // Used to store user activity
 const activity = {};
-
 document.addEventListener('DOMContentLoaded', init);
 
 /**
- * Initialize the cookie generate, actiity dispatch, and the data sending system
+ * Initialize the analytics.
  */
 function init() {
   generateCookies();
@@ -41,8 +40,8 @@ function init() {
 }
 
 /**
- * Generates a cookie to act as a session id for the activity.
- * @returns 1 if a cookie was generated and 0 if one was already present.
+ * Generates a session cookie with a randomly generated session ID.
+ * @returns 1 If a cookie was made, 0 if the cookie already existed.
  */
 function generateCookies() {
   const isCookiePresent = document.cookie.indexOf('session=');
@@ -57,9 +56,9 @@ function generateCookies() {
 }
 
 /**
- * Gets the values of a given cookie.
- * @param {String} cname The name of the cookie being gotten.
- * @returns The value of the cookie if it is found, otherwise an emptry string.
+ * Gets the given cookie's value.
+ * @param {String} cname Name of the cookie whose value we are getting.
+ * @returns The value of the cookie
  */
 function getCookie(cname) {
   const name = `${cname}=`;
@@ -78,15 +77,14 @@ function getCookie(cname) {
 }
 
 /**
- * Adds an event listener to the activity of the user which stores info to be
- * sent when triggered.
+ * Gathers info about the page naem and window screen size. Sets up the event
+ * listener for mouse clicks.
  */
-function dispatchActivity() {
+async function dispatchActivity() {
   const activityEvent = new Event('activity');
 
   activity.mouseClicks = [];
   document.addEventListener('click', (event) => {
-    console.log(activity);
     const click = {
       x: event.clientX,
       y: event.clientX,
@@ -95,7 +93,8 @@ function dispatchActivity() {
     document.dispatchEvent(activityEvent);
   });
 
-  activity.pageName = window.location.host;
+  activity.pageName = window.location.pathName;
+  activity.window = [window.screen.width, window.screen.height];
 
   document.addEventListener(
     'activity',
@@ -104,11 +103,15 @@ function dispatchActivity() {
     },
     false
   );
+
+  try {
+    const docRef = await addDoc(collection(db, 'analytics'), activity);
+    sessionStorage.setItem('id', docRef.id);
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
 }
 
-/**
- * Sends the stored activity data to the firebase storage async.
- */
 function sendDataInterval() {
   setInterval(async () => {
     const storedActivity = sessionStorage.getItem('activity');
