@@ -80,7 +80,8 @@ async function dispatchActivity() {
         console.log(click);
     })
 
-    activity.pageName = location.host
+    activity.pageName = location.pathName
+    activity.window = [screen.width, screen.height]
 
     console.log('Activity obj: ', activity)
 
