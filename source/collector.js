@@ -112,6 +112,9 @@ async function dispatchActivity() {
   }
 }
 
+/**
+ * Set up the async data sending function to firebase database.
+ */
 function sendDataInterval() {
   setInterval(async () => {
     const storedActivity = sessionStorage.getItem('activity');
