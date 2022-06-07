@@ -66,7 +66,7 @@ function getCookie(cname) {
 /********************
  *  Activity  *
  *******************/
-function dispatchActivity() {
+async function dispatchActivity() {
     const activityEvent = new Event('activity');
 
     activity.mouseClicks = []
@@ -87,6 +87,14 @@ function dispatchActivity() {
     document.addEventListener('activity', function(e) {
         sessionStorage.setItem('activity', JSON.stringify(activity));
     }, false);
+
+    try {
+        const docRef = await addDoc(collection(db, "analytics"), activity);
+        console.log("Document written with ID: ", docRef.id);
+        sessionStorage.setItem('id', docRef.id)
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
 }
 
 function sendDataInterval() {
@@ -104,10 +112,6 @@ function sendDataInterval() {
                 if (sessionStorage.getItem('id')) {
                     const refCollection = collection(db, "analytics");
                     await setDoc(doc(refCollection, sessionStorage.getItem('id')), dataObj)
-                } else {
-                    const docRef = await addDoc(collection(db, "analytics"), dataObj);
-                    console.log("Document written with ID: ", docRef.id);
-                    sessionStorage.setItem('id', docRef.id)
                 }
             } catch (e) {
                 console.error("Error adding document: ", e);
