@@ -215,7 +215,9 @@ function startTimer() {
 
 function dummy() {
   const foo = 1;
-  return foo;
+
+  const bar = 1 + foo;
+  return bar;
 }
 
 /**
