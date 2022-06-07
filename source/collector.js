@@ -27,7 +27,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Used to store user activity
-let activity = {};
+const activity = {};
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -86,6 +86,7 @@ function dispatchActivity() {
 
   activity.mouseClicks = [];
   document.addEventListener('click', (event) => {
+    console.log(activity);
     const click = {
       x: event.clientX,
       y: event.clientX,
@@ -110,9 +111,9 @@ function dispatchActivity() {
  */
 function sendDataInterval() {
   setInterval(async () => {
-    activity = sessionStorage.getItem('activity');
-    if (activity !== undefined) {
-      const dataObj = JSON.parse(activity);
+    const storedActivity = sessionStorage.getItem('activity');
+    if (storedActivity !== undefined) {
+      const dataObj = JSON.parse(storedActivity);
       if (getCookie('session') === '') {
         dataObj.session = generateCookies();
       } else {
@@ -130,7 +131,7 @@ function sendDataInterval() {
           sessionStorage.setItem('id', docRef.id);
         }
       } catch (e) {
-        // Continue
+        // console.error('Error adding document: ', e);
       }
     }
   }, 5000);
