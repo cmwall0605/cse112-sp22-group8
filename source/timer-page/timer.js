@@ -213,6 +213,11 @@ function startTimer() {
   document.getElementsByTagName('timer-comp')[0].dataset.running = 'true';
 }
 
+function dummy() {
+  const foo = 1;
+  return foo;
+}
+
 /**
  * Sets the data-minutes-left and data-seconds-left attributes of the
  * timer-comp based on the passed parameters.
