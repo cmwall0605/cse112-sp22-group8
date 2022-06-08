@@ -253,6 +253,7 @@ describe('Test Timer Buttons functions', () => {
     timerButtons.countDistraction();
 
     // Expect check
+
     expect(localStorage.getItem('currentDistractCounter')).toBe('1');
     expect(timerButtons.src).toBe('/assets/images/tomo-happy.webp');
   });
@@ -281,6 +282,7 @@ describe('Test Timer Buttons functions', () => {
     timerButtons.countDistraction();
 
     // Expect check
+
     expect(localStorage.getItem('currentDistractCounter')).toBe('3');
     expect(timerButtons.src).toBe('/assets/images/tomo-meh.webp');
   });

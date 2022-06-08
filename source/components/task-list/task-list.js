@@ -4,7 +4,7 @@
 
 /**
  * \<task-list\>
- * 
+ *
  * This webcomponent acts as the manager for tasks. It has the ability to
  * create tasks, change ordering of tasks in the list, and houses functionality
  * to play, edit, delete, and complete tasks, which the task item references in
