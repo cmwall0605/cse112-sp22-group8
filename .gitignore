@@ -23,3 +23,4 @@ source/.idea/vcs.xml
 source/.idea/workspace.xml
 source/.idea/jsLinters/eslint.xml
 source/.idea/inspectionProfiles/Project_Default.xml
+source/collector.js
