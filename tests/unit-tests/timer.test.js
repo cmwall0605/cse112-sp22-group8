@@ -14,7 +14,7 @@ const {
   createTask,
   failSession,
 } = require('../../source/timer-page/timer');
-
+const { TimerComp } = require('../../source/components/timer-comp/timer-comp');
 const {
   TimerButtons,
 } = require('../../source/components/timer-buttons/timer-buttons');
@@ -26,7 +26,7 @@ const {
  * https://stackoverflow.com/questions/57092154/how-to-test-img-onload-using-jest
  */
 class MockLocalStorage {
-  cosntructor() {
+  constructor() {
     this.store = {};
   }
 
@@ -88,12 +88,15 @@ describe('Test Timer functions', () => {
       '<h1 id="currTask">No Task Selected</h1>' +
       '<button id="deselect-task">cancel</button>' +
       '</div>' +
-      '<timer-comp data-running="false"></timer-comp>' +
-      '<timer-buttons></timer-buttons>' +
       '</body>';
     localStorage.clear();
     localStorage.setItem('currentTask', 'test1');
     localStorage.setItem('allTasks', JSON.stringify(allTasks));
+    const timerButtons = document.createElement('timer-buttons');
+    document.querySelector('body').appendChild(timerButtons);
+    const timerComp = document.createElement('timer-comp');
+    timerComp.setAttribute('data-running', 'false');
+    document.querySelector('body').appendChild(timerComp);
   });
 
   test('test timterOnLoad', () => {
@@ -137,13 +140,57 @@ describe('Test Timer functions', () => {
     );
   });
 
-  test('Test autoContinue()', () => {});
+  test('Test autoContinue() on a work session', () => {
+    jest.useFakeTimers();
+    jest.spyOn(global, 'setTimeout');
+    const hideButtonsSpy = jest.spyOn(
+      document.querySelector('timer-buttons'),
+      'hideButtons'
+    );
+    localStorage.setItem('shortBreak', 'true');
+    autoContinue();
+    jest.advanceTimersByTime(2000);
+    expect(setTimeout).toHaveBeenCalledTimes(1);
+    expect(hideButtonsSpy).toHaveBeenCalled();
+  });
 
-  test('Test changeTask()', () => {});
+  test('Test autoContinue() on a break session', () => {
+    jest.useFakeTimers();
+    jest.spyOn(global, 'setTimeout');
+    const displaySpy = jest.spyOn(
+      document.querySelector('timer-buttons'),
+      'displayBreakComplete'
+    );
+    localStorage.setItem('shortBreak', 'false');
+    autoContinue();
+    jest.advanceTimersByTime(2000);
+    expect(setTimeout).toHaveBeenCalledTimes(1);
+    expect(displaySpy).toHaveBeenCalled();
+  });
 
-  test('Test startBreak()', () => {});
+  test('Test changeTask()', () => {
+    Object.defineProperty(window, 'location', {
+      value: {
+        href: '/timer-page/timer.html',
+      },
+    });
+    changeTask();
+    expect(window.location.href).toBe('../tasks-page/tasks.html');
+  });
 
-  test('Test deselectTask()', () => {});
+  test('Test startBreak()', () => {
+    startBreak();
+    expect(document.querySelector('timer-comp').dataset.running).toBe('true');
+  });
+
+  test('Test deselectTask()', () => {
+    deselectTask();
+    expect(localStorage.getItem('currentTask')).toBe(null);
+    expect(document.getElementById('currTask').innerHTML).toBe(
+      'No Task Selected'
+    );
+    expect(document.getElementById('deselect-task').style.display).toBe('none');
+  });
 
   test('Test startTimer()', () => {});
 
@@ -155,5 +202,13 @@ describe('Test Timer functions', () => {
 
   test('Test createTask()', () => {});
 
-  test('Test failSession()', () => {});
+  test('Test failSession()', () => {
+    Object.defineProperty(window, 'location', {
+      value: {
+        href: '/timer-page/timer.html',
+      },
+    });
+    failSession();
+    expect(window.location.href).toBe('../tasks-page/tasks.html');
+  });
 });

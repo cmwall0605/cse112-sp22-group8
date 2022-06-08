@@ -9,7 +9,7 @@ const {
  * https://stackoverflow.com/questions/57092154/how-to-test-img-onload-using-jest
  */
 class MockLocalStorage {
-  cosntructor() {
+  constructor() {
     this.store = {};
   }
 
@@ -142,25 +142,6 @@ describe('Test Timer Buttons functions', () => {
       '<input type="text" id="task-note">';
   });
 
-  // test('Test startTimer', () => {
-  //     localStorage.setItem('todayPomo', 2);
-
-  //     // Create Element
-  //     const timerButtons = document.createElement('timer-buttons');
-  //     document.getElementById('test').appendChild(timerButtons);
-
-  //     // Call Function
-  //     timerButtons.startTimer();
-
-  //     // Expect check
-  //     expect(localStorage.getItem('todayPomo')).toBe('3');
-  //     expect(timerButtons.isFailed).toBe(true);
-  //     expect(timerButtons.shadowRoot.getElementById('start-btn').style.display).toBe('none');
-  //     expect(timerButtons.shadowRoot.getElementById('distraction-btn').style.display).toBe('');
-  //     expect(timerButtons.shadowRoot.getElementById('fail-btn').style.display).toBe('');
-  //     expect(timerButtons.currentDistractCounter).toBe(0);
-  // });
-
   test('Test setDisableTaskForm', () => {
     // Create Element
     const timerButtons = document.createElement('timer-buttons');
@@ -200,12 +181,6 @@ describe('Test Timer Buttons functions', () => {
 
     // Call Function
     timerButtons.hideButtons();
-
-    // Expect check
-    // TODO: LINTING ISSUE fix
-    //   for (const el of timerButtons.shadowRoot.querySelector('section').children) {
-    //       expect(el.style.display).toBe('none');
-    //   }
   });
 
   test('Test setupBreak', () => {
