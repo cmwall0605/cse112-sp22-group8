@@ -44,6 +44,7 @@ jobs:
         cp source/firebase.json deploy/
         cp source/index.html deploy/index.html
         cp source/404.html deploy/404.html
+        cp source/collector.mjs deploy/collector.mjs
         cp minified/header-comp.* deploy/components/header-comp
         cp minified/task-item.* deploy/components/task-item
         cp minified/task-list.* deploy/components/task-list
