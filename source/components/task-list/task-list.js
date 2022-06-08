@@ -362,12 +362,12 @@ class TaskList extends HTMLElement {
     taskItem.current = taskInfo.current;
     taskItem.number = taskInfo.number;
     taskItem.completed = taskInfo.completed;
-    // taskItem.setFunctions(
-    //   TaskList.playTask.bind(this),
-    //   this.deleteTask.bind(this),
-    //   this.editTask.bind(this),
-    //   this.setCheck.bind(this)
-    // );
+    taskItem.setFunctions(
+      TaskList.playTask.bind(this),
+      this.deleteTask.bind(this),
+      this.editTask.bind(this),
+      this.setCheck.bind(this)
+    );
     // append the newly created <task-item> to section
     const taskList = this.shadowRoot.querySelector('section');
     taskList.insertBefore(taskItem, taskList.firstChild);
