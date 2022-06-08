@@ -408,10 +408,17 @@ function failSession() {
 if (typeof exports !== 'undefined') {
   module.exports = {
     continueTask,
+    timerOnLoad,
+    getTask,
+    getTasks,
+    autoContinue,
     changeTask,
     startBreak,
     deselectTask,
     startTimer,
+    setTimer,
+    timerCompCallback,
+    finishedTask,
     createTask,
     failSession,
   };

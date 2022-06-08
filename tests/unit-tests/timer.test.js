@@ -1,12 +1,23 @@
 const {
   continueTask,
+  timerOnLoad,
+  getTask,
+  getTasks,
+  autoContinue,
   changeTask,
   startBreak,
   deselectTask,
   startTimer,
+  setTimer,
+  timerCompCallback,
+  finishedTask,
   createTask,
   failSession,
 } = require('../../source/timer-page/timer');
+
+const {
+  TimerButtons,
+} = require('../../source/components/timer-buttons/timer-buttons');
 
 /**
  * Created a mock local storage object since local storage does not exist in the
@@ -41,24 +52,22 @@ global.localStorage = new MockLocalStorage();
 
 const allTasks = [];
 const newTask1 = {
-  id: '123456',
+  id: 'test1',
   completed: false,
   name: 'Task1',
   number: 5,
   current: 0,
-  note: 'OK1',
 };
 const newTask2 = {
-  id: '333333',
+  id: 'test2',
   completed: false,
   name: 'Task2',
   number: 6,
   current: 1,
-  note: 'OK2',
 };
 
 const newTask3 = {
-  id: '555555',
+  id: 'test3',
   completed: false,
   name: 'Task3',
   number: 7,
@@ -73,138 +82,78 @@ allTasks.push(newTask3);
 describe('Test Timer functions', () => {
   beforeEach(() => {
     document.body.innerHTML =
-      '<body></body>' +
-      '<div id = "test"> ' +
+      '<body>' +
+      '<header-comp page="timer"></header-comp>' +
+      '<div class="container">' +
+      '<h1 id="currTask">No Task Selected</h1>' +
+      '<button id="deselect-task">cancel</button>' +
       '</div>' +
-      '<button id="button" />' +
-      '<input type="text" id="currTask">' +
-      '<input type="text" id="deselect-task">' +
-      '<input type="text" id="task-note">' +
-      '<timer-comp></timer-comp>';
+      '<timer-comp data-running="false"></timer-comp>' +
+      '<timer-buttons></timer-buttons>' +
+      '</body>';
     localStorage.clear();
-    localStorage.setItem('currentTask', '123456');
+    localStorage.setItem('currentTask', 'test1');
     localStorage.setItem('allTasks', JSON.stringify(allTasks));
   });
 
-  //   test('test Create Task', () => {
-  //     createTask(null,'test Task', 1);
-  //     expect(localStorage.getItem('currTask')).toBe('test Task');
-  //   })
+  test('test timterOnLoad', () => {
+    timerOnLoad();
 
-  test('test continueTask', () => {
-    const timerComp = document.createElement('timer-comp');
-    document.getElementById('test').appendChild(timerComp);
-    localStorage.setItem('timerMinutes', 100);
-    continueTask();
-    expect(document.getElementById('currTask').innerHTML).toBe(
-      'No Task Selected'
-    );
-    expect(document.getElementById('deselect-task').style.display).toBe('none');
+    // Test that local storage was set up.
+    expect(localStorage.getItem('timerMinutes')).toBe('25');
+    expect(localStorage.getItem('shortBreakMinutes')).toBe('5');
+    expect(localStorage.getItem('longBreakMinutes')).toBe('15');
+    expect(localStorage.getItem('autoContinue')).toBe('false');
+
+    // Test that the timer button functions were set up.
+    expect(document.querySelector('timer-buttons').changeTask).not.toBe(null);
+    expect(document.querySelector('timer-buttons').continueTask).not.toBe(null);
+    expect(document.querySelector('timer-buttons').createTask).not.toBe(null);
+    expect(document.querySelector('timer-buttons').failSession).not.toBe(null);
+    expect(document.querySelector('timer-buttons').getTask).not.toBe(null);
+    expect(document.querySelector('timer-buttons').getTasks).not.toBe(null);
+    expect(document.querySelector('timer-buttons').startBreak).not.toBe(null);
+    expect(document.querySelector('timer-buttons').startTimer).not.toBe(null);
   });
 
-  //   // Tests to be exported out to timer-component.test.js
-  //   /* test('Set Progress function test', () => {
-  //     setProgress(50);
-  //     expect(
-  //       document.getElementById('progress-ring-circle').style.strokeDashoffset
-  //     ).toBe('-628.3185307179587');
-  //   });
+  test('test continueTask', () => {
+    localStorage.setItem('timerMinutes', 100);
+    continueTask();
+    expect(document.getElementById('currTask').innerHTML).toBe('Task1');
+    expect(document.getElementById('deselect-task').style.display).not.toBe(
+      'none'
+    );
+  });
 
-  //   test('reset Progress Ring function test', () => {
-  //     resetProgressRing();
-  //     expect(
-  //       document.getElementById('progress-ring-circle').style.strokeDashoffset
-  //     ).toBe('0');
-  //   }); */
+  test('Test getTask()', () => {
+    const recievedTask = getTask();
+    expect(recievedTask.id).toBe(localStorage.getItem('currentTask'));
+  });
 
-  //   test('display break complete function test', () => {
-  //     window.HTMLMediaElement.prototype.play = () => {
-  //       /* do nothing */
-  //     };
-  //     displayBreakComplete();
-  //     expect(document.getElementById('breakCompleteModal').style.display).toBe(
-  //       'block'
-  //     );
-  //   });
+  test('Test getTask()', () => {
+    const recievedTasks = getTasks();
+    expect(JSON.stringify(recievedTasks)).toBe(
+      localStorage.getItem('allTasks')
+    );
+  });
 
-  //   test('change Task function test', () => {
-  //     global.window = Object.create(window);
-  //     const url = 'http://dummy.com';
-  //     Object.defineProperty(window, 'location', {
-  //       value: {
-  //         href: url,
-  //       },
-  //     });
-  //     changeTask();
-  //     expect(document.getElementById('breakCompleteModal').style.display).toBe(
-  //       'none'
-  //     );
-  //     expect(window.location.href).toEqual('../tasks-page/tasks.html');
-  //   });
+  test('Test autoContinue()', () => {});
 
-  //   test('startBreak function test', () => {
-  //     localStorage.clear();
-  //     localStorage.setItem('ShortBreak', 'true');
-  //     startBreak();
-  //     expect(document.getElementById('start-break-btn').disabled).toBe(true);
-  //     expect(document.getElementById('start-break-btn').className).toBe(
-  //       'disable'
-  //     );
-  //   });
+  test('Test changeTask()', () => {});
 
-  //   test('display short break function test', () => {
-  //     startBreak();
-  //   });
+  test('Test startBreak()', () => {});
 
-  //   test('startTimer function test', () => {
-  //     startTimer();
-  //     expect(document.getElementById('distraction-btn').style.display).toBe('');
-  //     expect(document.getElementById('fail-btn').style.display).toBe('');
-  //   });
+  test('Test deselectTask()', () => {});
 
-  //   // Tests that need to be rewritten/maybe exported to timer component tests
-  //   /*
-  //   test('start function test 1', () => {
-  //     start(1, 9);
-  //     expect(document.getElementById('minutes').innerHTML).toBe('01');
-  //     expect(document.getElementById('seconds').innerHTML).toBe('09');
-  //     expect(document.getElementById('title_timer').innerHTML).toBe('1:09');
-  //   });
+  test('Test startTimer()', () => {});
 
-  //   test('start function test 2', () => {
-  //     start(15, 30);
-  //     expect(document.getElementById('minutes').innerHTML).toBe('15');
-  //     expect(document.getElementById('seconds').innerHTML).toBe('30');
-  //     expect(document.getElementById('title_timer').innerHTML).toBe('15:30');
-  //   }); */
+  test('Test setTimer()', () => {});
 
-  //   test('distraction count', () => {
-  //     distractionCount();
-  //     expect(document.getElementById('distraction-btn').innerHTML).toBe(
-  //       'Distraction : 1'
-  //     );
-  //   });
+  test('Test timerCompCallback()', () => {});
 
-  //   test('display fail modal function test', () => {
-  //     displayFailModal();
-  //     expect(document.getElementById('failModal').style.display).toBe('block');
-  //   });
+  test('Test finishedTask()', () => {});
 
-  //   test('fail session function test', () => {
-  //     global.window = Object.create(window);
-  //     const url = 'http://dummy.com';
-  //     Object.defineProperty(window, 'location', {
-  //       value: {
-  //         href: url,
-  //       },
-  //     });
-  //     failSession();
-  //     expect(document.getElementById('failModal').style.display).toBe('none');
-  //     expect(window.location.href).toEqual('../tasks-page/tasks.html');
-  //   });
+  test('Test createTask()', () => {});
 
-  //   test('quit Fail Modal function test', () => {
-  //     quitFailModal();
-  //     expect(document.getElementById('failModal').style.display).toBe('none');
-  //   });
+  test('Test failSession()', () => {});
 });
