@@ -92,6 +92,7 @@ describe('Test Timer functions', () => {
     localStorage.clear();
     localStorage.setItem('currentTask', 'test1');
     localStorage.setItem('allTasks', JSON.stringify(allTasks));
+    localStorage.setItem('todayPomo', 0);
     const timerButtons = document.createElement('timer-buttons');
     document.querySelector('body').appendChild(timerButtons);
     const timerComp = document.createElement('timer-comp');
@@ -192,15 +193,167 @@ describe('Test Timer functions', () => {
     expect(document.getElementById('deselect-task').style.display).toBe('none');
   });
 
-  test('Test startTimer()', () => {});
+  test('Test startTimer()', () => {
+    startTimer();
+    expect(localStorage.getItem('todayPomo')).toBe('1');
+    expect(localStorage.getItem('currentDistractCounter')).toBe('0');
+    expect(document.getElementById('deselect-task').style.display).toBe('none');
+    expect(document.querySelector('timer-comp').dataset.running).toBe('true');
+  });
 
-  test('Test setTimer()', () => {});
+  test('Test setTimer()', () => {
+    const timerComp = document.querySelector('timer-comp');
+    setTimer(1, 2);
+    expect(timerComp.dataset.minutesLeft).toBe('1');
+    expect(timerComp.dataset.secondsLeft).toBe('2');
+    setTimer(25, 0);
+    expect(timerComp.dataset.minutesLeft).toBe('25');
+    expect(timerComp.dataset.secondsLeft).toBe('0');
+    setTimer(15, 12);
+    expect(timerComp.dataset.minutesLeft).toBe('15');
+    expect(timerComp.dataset.secondsLeft).toBe('12');
+    setTimer(5, 20);
+    expect(timerComp.dataset.minutesLeft).toBe('5');
+    expect(timerComp.dataset.secondsLeft).toBe('20');
+  });
 
-  test('Test timerCompCallback()', () => {});
+  test(
+    'Test timerCompCallback() with runnning to false with isPomo to true and ' +
+      'sessionCounter to 0 (also tests finishedTask())',
+    () => {
+      localStorage.setItem('sessionCounter', 0);
+      localStorage.setItem('isPomo', 'true');
+      const mutations = [
+        {
+          attributeName: 'data-running',
+          target: {
+            dataset: {
+              running: 'false',
+            },
+          },
+        },
+      ];
+      const breakDialog = document
+        .querySelector('timer-buttons')
+        .shadowRoot.getElementById('breakCompleteDialog');
+      breakDialog.showModal = jest.fn(() => {
+        breakDialog.setAttribute('not-hidden', 'true');
+      });
+      timerCompCallback(mutations);
+      expect(breakDialog.getAttribute('not-hidden')).toBe('true');
+      expect(localStorage.getItem('sessionCounter')).toBe('0');
+      expect(localStorage.getItem('isPomo')).toBe('false');
+    }
+  );
 
-  test('Test finishedTask()', () => {});
+  test(
+    'Test timerCompCallback() with runnning to false with isPomo to false' +
+      'and sessionCounter to 0 (short break)',
+    () => {
+      jest.useFakeTimers();
+      localStorage.setItem('sessionCounter', 0);
+      localStorage.setItem('isPomo', 'false');
+      localStorage.setItem('shortBreak', 'true');
+      const mutations = [
+        {
+          attributeName: 'data-running',
+          target: {
+            dataset: {
+              running: 'false',
+            },
+          },
+        },
+      ];
+      const failDialog = document
+        .querySelector('timer-buttons')
+        .shadowRoot.getElementById('failDialog');
+      failDialog.close = jest.fn(() => {
+        failDialog.setAttribute('hidden', 'true');
+      });
+      timerCompCallback(mutations);
+      jest.advanceTimersByTime(2000);
+      expect(failDialog.hidden).toBe(true);
+      expect(localStorage.getItem('sessionCounter')).toBe('1');
+      expect(localStorage.getItem('isPomo')).toBe('true');
+      expect(document.getElementById('deselect-task').style.display).toBe(
+        'none'
+      );
+      expect(document.getElementById('currTask').innerHTML).toBe('Short Break');
+    }
+  );
 
-  test('Test createTask()', () => {});
+  test(
+    'Test timerCompCallback() with runnning to false with isPomo to false' +
+      'and sessionCounter to 0 (long break)',
+    () => {
+      jest.useFakeTimers();
+      localStorage.setItem('sessionCounter', 3);
+      localStorage.setItem('isPomo', 'false');
+      const mutations = [
+        {
+          attributeName: 'data-running',
+          target: {
+            dataset: {
+              running: 'false',
+            },
+          },
+        },
+      ];
+      const failDialog = document
+        .querySelector('timer-buttons')
+        .shadowRoot.getElementById('failDialog');
+      failDialog.close = jest.fn(() => {
+        failDialog.setAttribute('hidden', 'true');
+      });
+      timerCompCallback(mutations);
+      jest.advanceTimersByTime(2000);
+      expect(failDialog.hidden).toBe(true);
+      expect(localStorage.getItem('sessionCounter')).toBe('4');
+      expect(localStorage.getItem('isPomo')).toBe('true');
+      expect(document.getElementById('deselect-task').style.display).toBe(
+        'none'
+      );
+      expect(document.getElementById('currTask').innerHTML).toBe('Long Break');
+    }
+  );
+
+  test('Test timerCompCallback() with non data-running mutation', () => {
+    const mutations = [
+      {
+        attributeName: 'not-data',
+        target: {
+          dataset: {
+            running: 'true',
+          },
+        },
+      },
+    ];
+
+    timerCompCallback(mutations);
+    const timer = document.getElementsByTagName('timer-comp')[0];
+    timer.dataset.minutesLeft = 1;
+    timer.dataset.secondsLeft = 2;
+    timerCompCallback(mutations);
+    expect(document.title).toBe('Tomo Timer - 1:02');
+    timer.dataset.minutesLeft = 10;
+    timer.dataset.secondsLeft = 32;
+    timerCompCallback(mutations);
+    expect(document.title).toBe('Tomo Timer - 10:32');
+  });
+
+  test('Test createTask() with existing task', () => {
+    const id = 'test2';
+    createTask(id);
+    expect(document.getElementById('currTask').innerHTML).toBe('Task2');
+    expect(localStorage.getItem('currentTask')).toBe('test2');
+  });
+
+  test('Test createTask() with new task', () => {
+    const name = 'newName';
+    const count = 3;
+    createTask(null, name, count);
+    expect(document.getElementById('currTask').innerHTML).toBe('newName');
+  });
 
   test('Test failSession()', () => {
     Object.defineProperty(window, 'location', {
