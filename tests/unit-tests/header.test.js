@@ -1,7 +1,7 @@
 require('../../source/components/header-comp/header-comp');
 
 class MockLocalStorage {
-  cosntructor() {
+  constructor() {
     this.store = {};
   }
 

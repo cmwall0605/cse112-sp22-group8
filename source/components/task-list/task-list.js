@@ -224,7 +224,6 @@ class TaskList extends HTMLElement {
    */
   deleteTask(event) {
     // Get the item to delete in the DOM
-    console.log(event.target);
     const itemToDelete = event.target.getRootNode().host;
     const { name, id } = itemToDelete;
     if ('ontouchstart' in window) {

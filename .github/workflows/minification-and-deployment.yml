@@ -53,7 +53,6 @@ jobs:
         cp minified/global.css deploy/globals
         cp minified/stats.* deploy/stats-page
         cp source/stats-page/stats.html deploy/stats-page/
-        cp minified/tasks.* deploy/tasks-page
         cp source/tasks-page/tasks.html deploy/tasks-page/
         cp minified/timer.* deploy/timer-page
         cp source/timer-page/timer.html deploy/timer-page/

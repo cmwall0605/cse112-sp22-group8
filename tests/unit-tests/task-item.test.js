@@ -570,12 +570,10 @@ describe('Task Item Test Attributes', () => {
     taskItemElement.note = inputTask.note;
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
-    const playButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="play"]'
-    );
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const playButton =
+      taskItemElement.shadowRoot.querySelector('button[job="play"]');
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
     expect(playButton.disabled).toBe(false);
     expect(editButton.disabled).toBe(false);
     taskItemElement.setAttribute('completed', 'true');
@@ -605,12 +603,10 @@ describe('Task Item Test Attributes', () => {
     taskItemElement.note = inputTask.note;
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
-    const playButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="play"]'
-    );
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const playButton =
+      taskItemElement.shadowRoot.querySelector('button[job="play"]');
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
     expect(playButton.hasAttribute('disabled')).toBe(true);
     expect(editButton.hasAttribute('disabled')).toBe(true);
     taskItemElement.setAttribute('completed', 'false');
@@ -640,12 +636,10 @@ describe('Task Item Test Attributes', () => {
     taskItemElement.note = inputTask.note;
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
-    const playButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="play"]'
-    );
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const playButton =
+      taskItemElement.shadowRoot.querySelector('button[job="play"]');
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
     expect(playButton.hasAttribute('disabled')).toBe(false);
     expect(editButton.hasAttribute('disabled')).toBe(true);
     taskItemElement.setAttribute('completed', 'true');
@@ -675,12 +669,10 @@ describe('Task Item Test Attributes', () => {
     taskItemElement.note = inputTask.note;
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
-    const playButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="play"]'
-    );
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const playButton =
+      taskItemElement.shadowRoot.querySelector('button[job="play"]');
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
     expect(playButton.hasAttribute('disabled')).toBe(true);
     expect(editButton.hasAttribute('disabled')).toBe(true);
     taskItemElement.setAttribute('completed', 'false');
@@ -710,9 +702,8 @@ describe('Task Item Test Attributes', () => {
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
 
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
 
     expect(editButton.hasAttribute('disabled')).toBe(false);
     taskItemElement.setAttribute('current', 1);
@@ -741,9 +732,8 @@ describe('Task Item Test Attributes', () => {
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
 
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
 
     expect(editButton.hasAttribute('disabled')).toBe(false);
     taskItemElement.setAttribute('current', 0);
@@ -772,9 +762,8 @@ describe('Task Item Test Attributes', () => {
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
 
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
 
     expect(editButton.hasAttribute('disabled')).toBe(true);
     taskItemElement.setAttribute('current', 1);
@@ -803,9 +792,8 @@ describe('Task Item Test Attributes', () => {
     document.getElementById('test').appendChild(taskItemElement);
     taskItemElement.checkmark.checked = inputTask.completed;
 
-    const editButton = taskItemElement.shadowRoot.querySelector(
-      'button[job="edit"]'
-    );
+    const editButton =
+      taskItemElement.shadowRoot.querySelector('button[job="edit"]');
 
     expect(editButton.hasAttribute('disabled')).toBe(true);
     taskItemElement.setAttribute('current', 0);

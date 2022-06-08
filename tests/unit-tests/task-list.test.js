@@ -10,7 +10,7 @@ require('../../source/components/task-list/task-list');
  * https://stackoverflow.com/questions/57092154/how-to-test-img-onload-using-jest
  */
 class MockLocalStorage {
-  cosntructor() {
+  constructor() {
     this.store = {};
   }
 
@@ -174,90 +174,6 @@ describe('Test other event functions', () => {
     Storage.prototype.getItem = jest.fn(() => JSON.stringify(allTasks));
   });
 
-  // test('Test editTask event', () => {
-  //   // Create and set task list element in document
-  //   const taskList = document.createElement('task-list');
-  //   document.querySelector('body').appendChild(taskList);
-
-  //   // Get task item 1's button
-  //   const taskItem = taskList.shadowRoot.getElementById('1');
-  //   const taskItemButton = taskItem.shadowRoot.querySelector(
-  //     'button[job="edit"]'
-  //   );
-
-  //   // Get edit form
-  //   const editForm = document.getElementById('editform');
-
-  //   // Run editTask
-  //   const newTitle = 'new Name';
-  //   const newNumber = 10;
-  //   taskList.editTask('1', newTitle, newNumber);
-
-  //   expect(taskList.allTasks[0].name).toBe(newTitle);
-  //   expect(taskList.allTasks[0].number).toBe(newNumber);
-  // });
-
-  // // test('Test deleteTask event', () => {
-  // //   // Create and set task list element in document
-  // //   const taskList = document.createElement('task-list');
-  // //   document.querySelector('body').appendChild(taskList);
-
-  // //   // Get task item 1's button
-  // //   const taskItem = taskList.shadowRoot.getElementById('1');
-  // //   const taskItemButton = taskItem.shadowRoot.querySelector(
-  // //     'button[job="delete"]'
-  // //   );
-
-  // //   // Define delete event
-  // //   const deleteEvent = new Event('click');
-  // //   Object.defineProperty(deleteEvent, 'target', {
-  // //     writable: false,
-  // //     value: taskItemButton,
-  // //   });
-
-  // //   // Define submit event
-  // //   const confirmEvent = new Event('click');
-
-  // //   // Run deleteTask
-  // //   taskList.deleteTask(deleteEvent);
-
-  // //   // comfirm changes
-  // //   document.getElementById('confirm-button').dispatchEvent(confirmEvent);
-  // //   expect(taskList.contains(taskItem)).toBe(false);
-  // //   expect(taskList.allTasks[0].id).toBe('2');
-  // // });
-
-  // test('Test setCheck event', () => {
-  //   // Create and set task list element in document
-  //   const taskList = document.createElement('task-list');
-  //   document.querySelector('body').appendChild(taskList);
-
-  //   // Get task item 1's button
-  //   const taskItem = taskList.shadowRoot.getElementById('1');
-  //   const taskItemCheck = taskItem.shadowRoot.querySelector('input');
-
-  //   // Define check event
-  //   const checkEvent = new Event('click');
-  //   Object.defineProperty(checkEvent, 'target', {
-  //     writable: false,
-  //     value: taskItemCheck,
-  //   });
-
-  //   // Run setCheck
-  //   taskList.setCheck(checkEvent);
-
-  //   // comfirm changes
-  //   expect(taskList.allTasks[0].completed).toBe(true);
-  //   expect(taskItem.completed).toBe('true');
-
-  //   // Run setCheck again
-  //   taskList.setCheck(checkEvent);
-
-  //   // comfirm changes
-  //   expect(taskList.allTasks[0].completed).toBe(false);
-  //   expect(taskItem.completed).toBe('false');
-  // });
-
   test('Test playTask even (aka play event)', () => {
     // Create and set task list element in document
     const taskList = document.createElement('task-list');
@@ -274,14 +190,6 @@ describe('Test other event functions', () => {
       writable: false,
       value: taskItemPlayBtn,
     });
-
-    // global.window = Object.create(window);
-    // const url = 'http://dummy.com';
-    // Object.defineProperty(window, 'location', {
-    //   value: {
-    //     location: url,
-    //   },
-    // });
 
     // Run playTask
     TaskList.playTask(playEvent);

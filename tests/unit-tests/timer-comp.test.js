@@ -1,6 +1,4 @@
-const {
-  TimerComp,
-} = require('../../source/components/timer-comp/timer-comp.js');
+const { TimerComp } = require('../../source/components/timer-comp/timer-comp');
 
 describe('Timer Componenet Test Constructor', () => {
   beforeEach(() => {

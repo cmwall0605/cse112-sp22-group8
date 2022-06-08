@@ -7,7 +7,7 @@ const { StatsCard } = require('../../source/components/stats-card/stats-card');
  * https://stackoverflow.com/questions/57092154/how-to-test-img-onload-using-jest
  */
 class MockLocalStorage {
-  cosntructor() {
+  constructor() {
     this.store = {};
   }
 

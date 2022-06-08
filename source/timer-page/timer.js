@@ -241,7 +241,6 @@ function timerCompCallback(mutations) {
       const timer = document.getElementsByTagName('timer-comp')[0];
       const minutes = timer.dataset.minutesLeft;
       const seconds = timer.dataset.secondsLeft;
-
       if (seconds < 10) {
         document.title = `Tomo Timer - ${minutes}:0${seconds}`;
       } else {
@@ -318,7 +317,6 @@ function finishedTask() {
     workEndAudio.play();
     setTimeout(() => {
       document.getElementById('deselect-task').style.display = 'none';
-
       if (localStorage.getItem('shortBreak') === 'true') {
         document.body.style.background =
           'linear-gradient(var(--spice-color),var(--gradient-medium))';
@@ -408,10 +406,17 @@ function failSession() {
 if (typeof exports !== 'undefined') {
   module.exports = {
     continueTask,
+    timerOnLoad,
+    getTask,
+    getTasks,
+    autoContinue,
     changeTask,
     startBreak,
     deselectTask,
     startTimer,
+    setTimer,
+    timerCompCallback,
+    finishedTask,
     createTask,
     failSession,
   };
