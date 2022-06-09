@@ -1,5 +1,4 @@
 # CSE 112 SPRING 2022 TEAM 8 (AKA Team Cre8tors)
-## README
 
 <div id="top"></div>
 <!--
@@ -19,7 +18,6 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 [![Contributors][contributors-shield]][contributors-url]
-[![CodeFactor][codefactor-shield]][codefactor-url]
 [![Firebase][firebase-shield]][firebase-url]
 [![MIT License][license-shield]][license-url]
 
@@ -41,6 +39,8 @@
     <a href="https://github.com/cmwall0605/cse112-sp22-group8/issues">Report Bug</a>
     ·
     <a href="https://github.com/cmwall0605/cse112-sp22-group8/issues">Request Feature</a>
+    ·
+    <a href="https://www.youtube.com/watch?v=xwpKl3QLHXY">View Final Video (Private)</a>
   </p>
 </div>
 
