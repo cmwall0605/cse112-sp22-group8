@@ -192,7 +192,7 @@ Major refactoring
   - [x] Header Icons as words
   - [x] Implement main.css file
   - [ ] Circles for Pomodoro count
-  - [ ] Adapt Readme
+  - [x] Adapt Readme
 
 Features
   - [x] Dynamic Timer
@@ -211,16 +211,16 @@ Features
   - [ ] Analytics Planning and Collection
   - [ ] Database Analytics
   - [ ] Implement Noob System
-  - [ ] Update CICD Wiki Page
-  - [ ] Fix up Website for Increased LightHouse Report Marks
+  - [x] Update CICD Wiki Page
+  - [x] Fix up Website for Increased LightHouse Report Marks
 
 CI/CD Pipeline
   - [x] Create Personal Access Token
 
 Testing  
-- [ ] 90% Coverage for Unit Tests
-- [ ] Unit Tests for timer and stats pages web components
-- [ ] Jest and Cypress tests
+- [x] 80% Coverage for Unit Tests
+- [x] Unit Tests for timer and stats pages web components
+- [x] Jest and Cypress tests
 
 See the [open issues](https://github.com/cmwall0605/cse112-sp22-group8/issues) for a full list of proposed features (and known issues).
 
