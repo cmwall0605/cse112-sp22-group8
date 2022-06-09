@@ -41,6 +41,8 @@
     <a href="https://github.com/cmwall0605/cse112-sp22-group8/issues">Request Feature</a>
     ·
     <a href="https://www.youtube.com/watch?v=xwpKl3QLHXY">View Final Video (Private)</a>
+    ·
+    <a href="https://www.youtube.com/watch?v=d9kA68D8L7s">View Final Video (Public)</a>
   </p>
 </div>
 
