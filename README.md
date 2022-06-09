@@ -42,7 +42,7 @@
     ·
     <a href="https://www.youtube.com/watch?v=xwpKl3QLHXY">View Final Video (Private)</a>
     ·
-    <a href="https://www.youtube.com/watch?v=d9kA68D8L7s">View Final Video (Public)</a>
+    <a href="https://www.youtube.com/watch?v=LD_ZBbxjvBk">View Final Video (Public)</a>
   </p>
 </div>
 
